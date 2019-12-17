@@ -40,10 +40,30 @@
 
 ## maven
 [官网](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)
-1. Install 
+1. **Install**
     ```bash
     sdk install maven
     ```
+**maven 换源**
+```bash
+tee $HOME/.m2/settings.xml <<-'EOF'
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+    <id>aliyunmaven</id>
+    <mirrorOf>central</mirrorOf>
+    <name>aliyun maven</name>
+    <url>https://maven.aliyun.com/repository/public </url>
+    </mirror>
+  </mirrors>
+</settings>
+EOF
+
+```
+
 2. Testing
    1. 创建Project，执行下面命令
    ```bash

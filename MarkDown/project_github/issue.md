@@ -8,5 +8,5 @@
 5. ”有无空格均可“版
 6. 混合运算
 
-
-
+##  issue branch的命名规则：
+> "#-<issue-short-desc>"，比如"1-cunit-demo"，而不是"1-conke"。悉知
