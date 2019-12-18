@@ -172,10 +172,9 @@ sdk install gradle
    ```bash
    $ gulp hello
    ```
+
 ### Testing2
-
 [github-gulp-babel](https://github.com/babel/gulp-babel#babeloptions)
-
 1. build project
 2. install dependencies
 ```bash
@@ -184,7 +183,7 @@ $ cnpm install --save-dev gulp-babel @babel/core @babel/preset-env gulp@4.0.0
 
 3. edit gulpfile.js
 
-```js
+```javascript
 var gulp = require('gulp');
 var babel = require('gulp-babel');
 
@@ -198,7 +197,7 @@ gulp.task('default', () =>
 ```
 
 4. edit src/app.js
-```js
+```javascript
 var a = "Maxwit"
 
 console.log(a)
