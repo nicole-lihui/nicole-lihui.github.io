@@ -47,7 +47,6 @@
 **maven 换源**
 
 ```bash
-
 tee $HOME/.m2/settings.xml <<-'EOF'
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -63,7 +62,6 @@ tee $HOME/.m2/settings.xml <<-'EOF'
   </mirrors>
 </settings>
 EOF
-
 ```
 
 2. Testing
@@ -178,34 +176,35 @@ sdk install gradle
 [github-gulp-babel](https://github.com/babel/gulp-babel#babeloptions)
 1. build project
 2. install dependencies
-  ```bash
-  $ cnpm install --save-dev gulp-babel @babel/core @babel/preset-env gulp@4.0.0
-  ```
+
+```bash
+$ cnpm install --save-dev gulp-babel @babel/core @babel/preset-env gulp@4.0.0
+```
 
 3. edit gulpfile.js
-  ```js
-  var gulp = require('gulp');
-  var babel = require('gulp-babel');
+```js
+var gulp = require('gulp');
+var babel = require('gulp-babel');
 
-  gulp.task('default', () =>
-    gulp.src('src/app.js')
-      .pipe(babel({
-        presets: ['@babel/preset-env']
-      }))
-      .pipe(gulp.dest('dist'))
-  );
-  ```
+gulp.task('default', () =>
+  gulp.src('src/app.js')
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
+    .pipe(gulp.dest('dist'))
+);
+```
 2. edit src/app.js
-    ```js
-    var a = "Maxwit"
+```js
+var a = "Maxwit"
 
-    console.log(a)
-    ```
+console.log(a)
+```
 3. run
-  ```bash
-  $ gulp
-  $ node dist/app.js
-  ```
+```bash
+$ gulp
+$ node dist/app.js
+```
 
 ## webpack
 [webpack官网](https://webpack.js.org/guides/getting-started/)
