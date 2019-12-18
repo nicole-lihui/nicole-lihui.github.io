@@ -178,12 +178,12 @@ sdk install gradle
 
 1. build project
 2. install dependencies
-
 ```bash
 $ cnpm install --save-dev gulp-babel @babel/core @babel/preset-env gulp@4.0.0
 ```
 
 3. edit gulpfile.js
+
 ```js
 var gulp = require('gulp');
 var babel = require('gulp-babel');
@@ -196,13 +196,16 @@ gulp.task('default', () =>
     .pipe(gulp.dest('dist'))
 );
 ```
-2. edit src/app.js
+
+4. edit src/app.js
 ```js
 var a = "Maxwit"
 
 console.log(a)
 ```
-3. run
+
+5. run
+
 ```bash
 $ gulp
 $ node dist/app.js
