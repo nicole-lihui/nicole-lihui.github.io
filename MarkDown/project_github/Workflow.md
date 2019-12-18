@@ -13,10 +13,16 @@
 $ git clone git@github.com:maxwit-course/c-like.git
 ```
 
-然后，基于master创建一个名为"N-github-account"的local branch（其中“N”为issue number，"github-account"为你的github账户名），比如：
+然后，基于master创建一个名为"N-github-account"的local branch（其中“N”为issue number，"github-account"为你的github账户名），
+
+**新的 issue branch的命名规则：**
+> "#-<issue-short-desc>"，比如"1-cunit-demo"，而不是"1-conke"。悉知
+
+
+比如：
 ```bash
 $ git checkout master # when current branch is NOT master
-$ git checkout -b 11-conke
+$ git checkout -b 1-junit-demo
 ```
 
 ### First commit
@@ -29,18 +35,18 @@ $ git commit -as
 
 输入正确的commit message，保存退出。message参考示例：
 ```
-1 swap 2 numbers
+1 JUnit demo
 2
-3 Closes #11
+3 Resolve #1
 ```
 
 注意格式和规范：第1行参考issue title做简要描述，写完空一行，然后写“Closes #N”(N为issue number)。
-:sassy_woman: “Closes”一行要求非常严格，不能错一个字符，否则系统无法识别
+:sassy_woman: “Resolve”一行要求非常严格，不能错一个字符，否则系统无法识别
 
 ### Open a draft PR
 首先，创建远程分支（注意输出信息）：
 ```bash
-$ git push -u origin 11-conke  # tips: tab completion
+$ git push -u origin 1-junit-demo  # tips: tab completion
 ```
 然后，点击输出信息中的URL，打开github PR页面。下面是PR页面操作要点：
 1. 选择[draft PR](https://github.blog/2019-02-14-introducing-draft-pull-requests/)。系统默认是普通PR，而不是draft PR，请注意不要选错。
