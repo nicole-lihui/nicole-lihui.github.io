@@ -173,7 +173,9 @@ sdk install gradle
    $ gulp hello
    ```
 ### Testing2
+
 [github-gulp-babel](https://github.com/babel/gulp-babel#babeloptions)
+
 1. build project
 2. install dependencies
 
