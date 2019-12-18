@@ -40,6 +40,7 @@ $ git commit -as
 3 Resolve #1
 ```
 
+
 注意格式和规范：第1行参考issue title做简要描述，写完空一行，然后写“Closes #N”(N为issue number)。
 :sassy_woman: “Resolve”一行要求非常严格，不能错一个字符，否则系统无法识别
 
