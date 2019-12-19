@@ -28,3 +28,9 @@ $ sudo systemctl set-default graphical.target
 ```bash
 echo "$USER   ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
 ```
+
+## 更改默认编辑器
+```bash
+echo export EDITOR=/usr/bin/vim >> ~/.bash.rc
+```
+
