@@ -3,7 +3,7 @@
 ## interface + lambda
 1. case 1
 
-```java
+```Java
 package com.maxwit;
 
 public class App {
@@ -22,7 +22,7 @@ public class App {
 **Question: what if there're more than 1 functions in IA?**
 1. case 2
 
-```java
+```Java
 package com.maxwit;
 
 public class App {
@@ -45,7 +45,7 @@ public class App {
 1. case 3
 
 
-```java
+```Java
 jshell> list
 list ==> [11, 33, 22]
 
