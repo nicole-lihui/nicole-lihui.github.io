@@ -2,6 +2,7 @@
 
 ## interface + lambda
 1. case 1
+
 ```java
 package com.maxwit;
 
@@ -17,8 +18,10 @@ public class App {
     }
 }
 ```
+
 **Question: what if there're more than 1 functions in IA?**
-1. case2
+1. case 2
+
 ```java
 package com.maxwit;
 
@@ -36,8 +39,12 @@ public class App {
         System.out.println(x);
     }
 }
+
 ```
-3. case3
+
+1. case 3
+
+
 ```java
 jshell> list
 list ==> [11, 33, 22]
