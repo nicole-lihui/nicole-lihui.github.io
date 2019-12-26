@@ -101,9 +101,9 @@ public class Demo {
     }
 }
 ```
-4. 匿名内部类
-   
-   1. case 1
+
+4. 匿名内部类   
+* case 1
    
 ```Java
 class A {
@@ -130,9 +130,9 @@ public class Demo {
 ```
     > B是Demo的内部类
 
-    1. case 2
+* case 2
+上面代码可以等价下面代码
 
-    上面代码可以等价下面代码
 ```Java
 class A {
     int x = 11;
@@ -156,7 +156,7 @@ public class Demo {
 }
 ```
 
-    1. case3: 两者综合代码
+* case3: 两者综合代码
    
 ```Java
 class A {
