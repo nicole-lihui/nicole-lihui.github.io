@@ -23,7 +23,7 @@ public class Demo {
 }
 ```
 ### 2. 内部类：
-1. A内部实例化B
+* A内部实例化B
 ```Java
 class A {
     class B {
@@ -47,7 +47,8 @@ public class Demo {
 }
 ```
 
-2. 在A类外实例化B `A.B ab = a.new B()`
+* 在A类外实例化B `A.B ab = a.new B()`
+ 
 ```Java
 class A {
     class B {
@@ -72,7 +73,8 @@ public class Demo {
     }
 }
 ```
-3. 内部类的类属性区别
+
+* 内部类的类属性区别
 ```Java
 class A {
     int x = 11;
@@ -102,7 +104,7 @@ public class Demo {
 }
 ```
 
-4. 匿名内部类   
+### 3.匿名内部类   
 * case 1
    
 ```Java
