@@ -3,7 +3,7 @@
 
 ## Abstract
 ### 1. 抽象类（虚基类）
-   ```java
+   ```Java
     abstract class A {
         public void f1() {
             System.out.println("A.f1()");
@@ -24,7 +24,7 @@
    ```
 ### 2. 内部类：
 1. A内部实例化B
-   ```java
+   ```Java
     class A {
         class B {
             public void foo() {
@@ -48,7 +48,7 @@
     ```
 
 2. 在A类外实例化B `A.B ab = a.new B()`
-   ```java
+   ```Java
     class A {
         class B {
             public void foo() {
@@ -73,7 +73,7 @@
     }
    ```
 3. 内部类的类属性区别
-   ```java
+   ```Java
     class A {
         int x = 11;
 
@@ -103,7 +103,7 @@
    ```
 4. 匿名内部类
    1. case 1
-   ```java
+   ```Java
     class A {
         int x = 11;
 
@@ -130,7 +130,7 @@
 
     2. case 2
     上面代码可以等价下面代码
-   ```java
+   ```Java
     class A {
         int x = 11;
 
@@ -153,7 +153,7 @@
     }
    ```
     3. case3: 两者综合代码
-    ```java
+    ```Java
     class A {
         int x = 11;
 
