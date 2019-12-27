@@ -14,7 +14,9 @@
 $ spring init -d=web,mybatis --package-name com.maxwit mybatisDsqlGenDemo
 ```
 2. config
+
 * generatorConfig.xml
+
 ```
 <!DOCTYPE generatorConfiguration PUBLIC
         "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
@@ -37,6 +39,7 @@ $ spring init -d=web,mybatis --package-name com.maxwit mybatisDsqlGenDemo
 ```
 
 * pom.xml
+
 ```
 	<dependencies>
         <!-- ... -->
@@ -96,7 +99,7 @@ spring.datasource.username=test
 spring.datasource.password=maxwit
 ```
 
-3. run
+1. run
 ```bash
 mvn mybatis-generator:generate
 ```
