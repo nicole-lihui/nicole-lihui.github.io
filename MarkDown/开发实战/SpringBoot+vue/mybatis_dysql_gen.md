@@ -15,7 +15,7 @@ $ spring init -d=web,mybatis --package-name com.maxwit mybatisDsqlGenDemo
 ```
 2. config
 * generatorConfig.xml
-```xml
+```XML
 <!DOCTYPE generatorConfiguration PUBLIC
         "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
@@ -37,7 +37,7 @@ $ spring init -d=web,mybatis --package-name com.maxwit mybatisDsqlGenDemo
 ```
 
 * pom.xml
-```xml
+```XML
 	<dependencies>
         <!-- ... -->
 
