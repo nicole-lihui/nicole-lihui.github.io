@@ -73,12 +73,11 @@ begin
     values
     (new.id);
 end; //
-delimiter;
 
 -- insert User
 insert into user(name, git_id, ding_id)
 values
-("Nicole", "git1", "ding1");,
+("Nicole", "git1", "ding1"),
 ("Tom", "git2", "ding2"),
 ("Jom", "git3", "ding3");
 
