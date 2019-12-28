@@ -2,13 +2,13 @@
 
 ## config
 1. spring 配置文件
-![配置文件1](http://nicole-lihui.github.io/MarkDown/开发实战/SpringBoot+vue/properties1.png)
-![配置文件2](http://nicole-lihui.github.io/MarkDown/开发实战/SpringBoot+vue/properties2.png)
+![配置文件1](images/properties1.png)
+![配置文件2](images/properties2.png)
 
 > $ mvn -Ptest test
 > -Ptest (环境) test（单元测试）
 
-2. 外部配置文件
+1. 外部配置文件
 [参考文档](https://docs.spring.io/autorepo/docs/spring-boot/1.2.0.M2/reference/html/boot-features-external-config.html)
 
 * application.properties
@@ -51,4 +51,4 @@ java -Dspring.config.location=/path/to/env/ app.jar
 export SPRING_CONFIG_LOCATION=/path/to/env
 java -jar app.jar
 ```
-![tupian](http://nicole-lihui.github.io/MarkDown/开发实战/SpringBoot+vue/external_config.png)
+![tupian](images/external_config.png)

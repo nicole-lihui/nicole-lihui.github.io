@@ -7,7 +7,7 @@
 > 使用之前需要先禁用自带的jackjson-databind
 
 **具体配置如下：**
-```xml
+```
 <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -28,7 +28,7 @@
 
 ## FastJson
 * 具体配置如下：
-```xml
+```
 <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -49,7 +49,7 @@
 
 * [fastjson SerializerFeature详解](https://blog.csdn.net/u010246789/article/details/52539576)
 * 自定义MyFastJsonConfig之后需要配置响应编码，在application.properties加入如下:
-  ```properties
+  ```
   spring.http.encoding.force-response=true
   ```
 

@@ -15,9 +15,10 @@ $ spring init -d=web demo
 $ cd demo
 $ mvn spring-boot:run
 ```
+
 ### maven
 1. pom.xml
-```xml
+```
   <parent>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-parent</artifactId>
@@ -40,8 +41,9 @@ $ mvn spring-boot:run
       </plugins>
   </build> 
 ```
+
 2. testcode
-```java
+```Java
 package com.maxwit;
 
 
