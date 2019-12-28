@@ -1,13 +1,5 @@
 # Spring + Mybatis + Mybatis Dyd
 
-## attention
-* spring 配置文件
-![配置文件1](http://nicole-lihui.github.io/MarkDown/开发实战/SpringBoot+vue/properties1.png)
-![配置文件2](http://nicole-lihui.github.io/MarkDown/开发实战/SpringBoot+vue/properties2.png)
-
-> $ mvn -Ptest test
-> -Ptest (环境) test（单元测试）
-
 ## Demo
 1. build
 ```bash
