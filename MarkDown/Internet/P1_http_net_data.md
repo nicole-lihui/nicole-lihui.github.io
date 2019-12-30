@@ -133,7 +133,11 @@
 2. 配置文件、systemd service、整合http server(nginx)、集群(高可用）
 
 
-## 
+### 三种传递参数方式
+*  form data
+*  path variable
+> /user/{id}/info
+* json (in body)
 
 
 ## Note

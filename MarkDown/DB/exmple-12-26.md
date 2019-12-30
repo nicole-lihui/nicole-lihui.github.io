@@ -9,7 +9,7 @@
 4. buddy:  buddy_id, disciple_id, course, start, end, chat_id
 5. login_history: user_id, time
 
-```sql
+```SQL
 create database ooda_db;
 use ooda_db;
 
@@ -98,5 +98,4 @@ values
 insert into buddy(buddy_id, disciple_id, course_id, chat_id)
 values
 (1, 2, 1, "chat1");
-
 ```
