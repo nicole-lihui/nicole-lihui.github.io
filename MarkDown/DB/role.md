@@ -23,9 +23,9 @@ create table user_role(
 
 insert into user(username, password, enabled, locked)
 values
-("root", "maxwit", 1, 0),
-("admin", "maxwit", 1, 0),
-("nicole", "maxwit", 1, 0);
+("root", "{noop}maxwit", 1, 0),
+("admin", "{{noop}}maxwit", 1, 0),
+("nicole", "{noop}maxwit", 1, 0);
 
 insert into role(name, cname)
 values
