@@ -34,3 +34,7 @@ echo "$USER   ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
 echo export EDITOR=/usr/bin/vim >> ~/.bash.rc
 ```
 
+## VNC
+```
+$ sudo apt install -y vinagre
+```
