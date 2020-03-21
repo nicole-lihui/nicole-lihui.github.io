@@ -134,13 +134,16 @@
 
 
 ### 三种传递参数方式
-*  form data
-*  path variable
+* form data          N/A
+*  path variable     @PathVariable
 > /user/{id}/info
-* json (in body)
+* json (in body)     @RequestBody
+
+
+N/A
+@PathVariable
 
 
 ## Note
 1. 实现form cgi.FieldStorage()解析
-
-
+2. 

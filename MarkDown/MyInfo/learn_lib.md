@@ -20,7 +20,7 @@
 2. 
 
 ## 计算机组成原理
-1. [操作系统-清华-Bonnie]](https://www.bilibili.com/video/av6538245?from=search&seid=9585410117805701634)
+1. [操作系统-清华-Bonnie](https://www.bilibili.com/video/av6538245?from=search&seid=9585410117805701634)
 2. [计算机组成原理-清华-Bonnie](https://www.bilibili.com/video/av58129929?from=search&seid=2231046636851822372)
 
 
