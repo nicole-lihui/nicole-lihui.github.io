@@ -38,3 +38,7 @@ echo export EDITOR=/usr/bin/vim >> ~/.bash.rc
 ```
 $ sudo apt install -y vinagre
 ```
+
+## Install DingTalk
+[Ubuntu 18.04安装钉钉](https://www.cnblogs.com/yuzhen0228/p/12016246.html)
+[Ubuntu使用Wine安装钉钉、微信、QQ等Windows软件](https://blog.csdn.net/anyuliuxing/article/details/103354403)
