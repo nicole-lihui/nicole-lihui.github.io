@@ -34,7 +34,13 @@ sudo umount qcow2_mount_point/
 sudo qemu-nbd --disconnect /dev/nbd0 
 ```
 
-2. 挂载qcow2后，修改密码
+2. 修改密码
+```
+sudo apt install libguestfs-tools 
+virt-customize -a CentOS8-1.qcow2 --root-password password:maxwit
+```
+
+> 似乎是无效的方法
 ```bash
 ls qcow2_mount_point/
 # 执行chroot
@@ -55,4 +61,5 @@ exit
 1. [如何使用qcow2创建虚拟机](https://www.jianshu.com/p/aa3fc4c300fe)
 2. [在 Linux 上如何挂载 qcow2 磁盘镜像](https://www.jianshu.com/p/6b977c02bfb2)
 3. [如何修改镜像密码](https://blog.csdn.net/jiahaojie1984/article/details/52242589)
-4. 
+4. [How To Customize Qcow2/Raw Linux OS disk image with virt-customize](https://computingforgeeks.com/customize-qcow2-raw-image-templates-with-virt-customize/)
+5. [How to reset forgotten root password for Linux KVM qcow2 image/vm](https://www.cyberciti.biz/faq/how-to-reset-forgotten-root-password-for-linux-kvm-qcow2-image-vm/)
