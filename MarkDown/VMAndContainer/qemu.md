@@ -6,11 +6,20 @@
 sudo apt -y install qemu-kvm qemu virt-manager virt-viewer libvirt-bin
 ```
 
-## Create VM
+## VM
 
 ### Run VM
+1. 最简单的命令
 ```bash
-sudo qemu-system-x86_64 -m 3500 -hda CentOS8-1.qcow2 --enable-kvm
+qemu-system-x86_64 -m 3500 -hda CentOS8-1.qcow2
+
+# 加速
+sudo kvm qemu-system-x86_64 -m 3500 -hda CentOS8-1.qcow2
+```
+2. efi 启动
+> uefi bios需要额外下载，[下载地址](https://retrage.github.io/edk2-nightly/)
+```bash
+
 ```
 
 #### qcow2
@@ -35,16 +44,42 @@ sudo qemu-nbd --disconnect /dev/nbd0
 ```
 
 2. 修改密码
+1. one
 ```
 sudo apt install libguestfs-tools 
 virt-customize -a CentOS8-1.qcow2 --root-password password:maxwit
 ```
 
-> 似乎是无效的方法
+2. two
 ```bash
-ls qcow2_mount_point/
+$ sudo apt install libguestfs-tools 
+# 
+$ openssl passwd -1 maxwit
+$1$2qm5j0mZ$pwXZrcg9GTL2xMdc00oqU.
+
+$ guestfish --rw -a CentOS8-1.qcow2 
+# Use run or launch command to access image file system:
+><fs> run
+><fs> list-filesystems 
+/dev/sda1: xfs
+><fs> mount /dev/sda1 /
+ ><fs> vi /etc/shadow
+root:$1$2qm5j0mZ$pwXZrcg9GTL2xMdc00oqU.:18116:0:99999:7:::
+bin:*:17834:0:99999:7:::
+daemon:*:17834:0:99999:7:::
+................
+chrony:!!:18116::::::
+><fs> sync 
+><fs> quit
+```
+
+3. three
+```bash
+# 先将镜像挂载
+$ ls qcow2_mount_point/
+
 # 执行chroot
-chroot qcow2_mount_point/
+$ chroot qcow2_mount_point/
 
 # 修改密码
 bash-4.4# passwd 
@@ -63,3 +98,4 @@ exit
 3. [如何修改镜像密码](https://blog.csdn.net/jiahaojie1984/article/details/52242589)
 4. [How To Customize Qcow2/Raw Linux OS disk image with virt-customize](https://computingforgeeks.com/customize-qcow2-raw-image-templates-with-virt-customize/)
 5. [How to reset forgotten root password for Linux KVM qcow2 image/vm](https://www.cyberciti.biz/faq/how-to-reset-forgotten-root-password-for-linux-kvm-qcow2-image-vm/)
+6. [How to Set root Password of CentOS 7 cloud image(guestfish)](https://www.linuxcnf.com/2019/11/how-to-set-root-password-of-centos-7.html)
