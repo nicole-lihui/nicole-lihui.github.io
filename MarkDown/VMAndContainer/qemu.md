@@ -99,3 +99,4 @@ exit
 4. [How To Customize Qcow2/Raw Linux OS disk image with virt-customize](https://computingforgeeks.com/customize-qcow2-raw-image-templates-with-virt-customize/)
 5. [How to reset forgotten root password for Linux KVM qcow2 image/vm](https://www.cyberciti.biz/faq/how-to-reset-forgotten-root-password-for-linux-kvm-qcow2-image-vm/)
 6. [How to Set root Password of CentOS 7 cloud image(guestfish)](https://www.linuxcnf.com/2019/11/how-to-set-root-password-of-centos-7.html)
+7. [Qemu 简单使用](https://blog.csdn.net/jiangwei0512/article/details/56495296)
