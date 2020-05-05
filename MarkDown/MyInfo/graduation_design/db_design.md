@@ -50,7 +50,7 @@ create table shop(
     shop_logo varchar(200),
     address varchar(200) not null,
     phone varchar(20) not null,
-    status boolean not null,
+    status_id integer not null,
     introduction varchar(200) not null
 );
 
@@ -66,7 +66,7 @@ create table orders(
     user_name varchar(100) not null,
     payType integer not null,
     address varchar(200) not null,
-    status integer not null,
+    status_id integer not null,
     start_time timestamp not null default current_timestamp,
     end_time timestamp
 );
@@ -114,7 +114,8 @@ create table bank(
 
 create table account_bank(
     id integer primary key auto_increment not null,
-    account_id integer not null  
+    account_id integer not null，
+    bank_id integer not null  
 );
 
 create table account_running(
