@@ -1,7 +1,9 @@
 # UEFI 启动 VM
 
 ## Question
+
 1. efi 启动 uefi bios需要额外下载，[下载地址](https://retrage.github.io/edk2-nightly/)
+
 > 下载平台的各种版本，我对这些的概念有些模糊。
 我尝试了
 RELEASEX64_OVMF.fd
@@ -12,7 +14,7 @@ RELEASEAARCH64_QEMU_EFI.fd
 
 ```bash
 # 能够启动的命令
-$ sudo kvm -m 2048 -hda CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2 
+$ sudo kvm -m 2048 -hda CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
 
 # RELEASEX64_OVMF.fd
 $ sudo kvm -m 2048 -bios RELEASEX64_OVMF.fd -hda CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2 -nographic
