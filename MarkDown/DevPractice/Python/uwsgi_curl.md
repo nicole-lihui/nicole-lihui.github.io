@@ -1,28 +1,33 @@
 # P1
 
 ## curl
-### 1. install
+### install
 
 1. 发送request 传递参数
 ```bash
 curl -d '11&22' -G http://localhost:8080
 ```
 
-### 2. Testing
+### Testing
 
 
 ## uwsgi
-### 1. install
+### install
 [uwsgi](https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html)
+```bash
+# On a Debian-based distro an
+$ sudo apt -y install build-essential python-dev
 
-### 2. Testing
+$ pip install uwsgi
+```
+### Testing
 1. 运行自定义文件，开启服务
 ```bash
 uwsgi --http :8080 --wsgi-file p_e.py 
 
 # URL: http://localhost:8080/?11&22 
 ```
-## 1. cgi 
+## cgi 
 ### parse_qs
 ```python
 def application(env, start_response):

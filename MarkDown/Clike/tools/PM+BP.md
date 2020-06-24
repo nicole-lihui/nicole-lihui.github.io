@@ -40,11 +40,11 @@
 
 ## maven
 [官网](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)
-1. **Install**
+### Install
     ```bash
     sdk install maven
     ```
-**maven 换源**
+### maven 换源
 
 ```bash
 tee $HOME/.m2/settings.xml <<-'EOF'
@@ -63,19 +63,18 @@ tee $HOME/.m2/settings.xml <<-'EOF'
 </settings>
 EOF
 ```
-
-2. Testing
-   1. 创建Project，执行下面命令
+### Usage
+1. 创建Project，执行下面命令
    ```bash
    $ mvn archetype:generate -DgroupId=com.maxwit -DartifactId=demo -DarchetypeArtifactId=maven-archetype-quickstart
    ```
-    1. mvn archetype:generate这个大致理解为一个生成命令，通过后面指定的参数，创建一个项目并且初始化一些东西（有初始化配置、初始代码模版等
-    2. groupId这个参数是用来指定package name
-    3. artifactId用来指定project name
-    4. archetypeArtifactId这个参数是指定项目类型：
-    5.  maven-archetype-quickstart（普通Java Application)
+    * mvn archetype:generate这个大致理解为一个生成命令，通过后面指定的参数，创建一个项目并且初始化一些东西（有初始化配置、初始代码模版等
+    * groupId这个参数是用来指定package name
+    * artifactId用来指定project name
+    * archetypeArtifactId这个参数是指定项目类型：
+    * maven-archetype-quickstart（普通Java Application)
   
-   2. 配置文件pom.xml
+2. 配置文件pom.xml
 ```xml
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,20 +94,19 @@ EOF
     </pluginManagement>
   </build>
 ```
-   7. 编译：
+3. 编译：
     ```bash
     $ mvn compile
     ```
-   8. 运行：
+4. 运行：
    ```bash
     $ mvn exec:java -Dexec.mainClass=com.maxwit.App
    ```
-**初始化**
-```bash
-$ mvn clean
-```
+5. 初始化
+    ```bash
+    $ mvn clean
+    ```
 
-3. 编译/解析: 单文件 + 模块化
 
 ## gradle
 1. **Gradle与Groovy之间的关系：**
@@ -246,6 +244,5 @@ $ node dist/app.js
   }
 }
 ```
-  src/index.js
 
 

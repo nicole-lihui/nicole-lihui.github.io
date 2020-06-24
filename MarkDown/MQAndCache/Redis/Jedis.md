@@ -2,7 +2,6 @@
 
 ## Introduce
 
-
 ## Usage
 ### Maven + Jedis
 * [Java中使用Jedis操作Redis(Maven导入包)、创建Redis连接池](https://www.cnblogs.com/chen-lhx/p/10430666.html)

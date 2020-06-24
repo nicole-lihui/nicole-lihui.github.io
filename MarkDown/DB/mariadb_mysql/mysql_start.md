@@ -38,7 +38,4 @@ delete from user where User='test' and Host='localhost';
 vi /etc/my.cnf.d/mariadb.server
 # add some config
 bind-address = 0.0.0.0
-
-
-# ubuntu
 ```

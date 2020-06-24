@@ -1,6 +1,5 @@
 # Class And Object
 
-
 ## Abstract
 ### 1. 抽象类（虚基类）
 ```Java

@@ -43,8 +43,6 @@ public class App {
 ```
 
 1. case 3
-
-
 ```Java
 jshell> list
 list ==> [11, 33, 22]

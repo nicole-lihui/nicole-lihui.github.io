@@ -3,7 +3,7 @@
 ##Directory
 
 ### 脚本
-####1. mac and linux
+#### 1. mac and linux
 ```shell
     while [ true ];
     do

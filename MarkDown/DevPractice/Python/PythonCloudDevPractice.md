@@ -48,8 +48,6 @@ addn-hosts=/etc/expand-hosts
 ```
 2. edit /etc/expand-hosts
 3. Test-client
-   * 
-
 ### 命令行
 #### DNS
 ```bash
