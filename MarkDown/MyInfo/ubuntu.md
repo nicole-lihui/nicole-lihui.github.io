@@ -13,6 +13,10 @@ sudo apt autoremove <package>
 dpkg -l |grep ^rc|awk '{print $2}' |sudo xargs dpkg -P
 ```
 
+```bash
+
+```
+
 ## 界面切换
 1. ubuntu开启字符界面：
 ```bash
@@ -47,3 +51,21 @@ $ sudo apt install -y vinagre
 ## Install DingTalk
 [Ubuntu 18.04安装钉钉](https://www.cnblogs.com/yuzhen0228/p/12016246.html)
 [Ubuntu使用Wine安装钉钉、微信、QQ等Windows软件](https://blog.csdn.net/anyuliuxing/article/details/103354403)
+
+
+## install java
+
+```bash
+# 重置系统后，安装java环境
+$ sudo apt update
+$ sudo apt install openjdk-8-jre -y
+```
+
+## 创建用户组和用户
+```bash
+groupadd maxwit
+useradd -g maxwit -s /bin/bash -m wit
+echo -e "maxwit2020\nmaxwit2020" | passwd wit
+echo “%maxwit ALL=(ALL:ALL) NOPASSWD:ALL” > /etc/sudoers.d/wit
+chmod 600 /etc/sudoers.d/wit
+```

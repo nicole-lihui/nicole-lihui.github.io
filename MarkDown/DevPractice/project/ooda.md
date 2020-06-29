@@ -27,3 +27,34 @@
      * Authorization 相当于Token，API访问在头部加上Authorization实现身份验证
 
 
+
+## emq
+1. start webhook
+2. config webhook
+
+## rabbitmq
+1. add user
+```bash
+$ rabbitmqctl add_user wit maxwit
+$ rabbitmqctl set_user_tags wit administrator
+$ rabbitmqctl set_permissions -p "/" wit ".*" ".*" ".*"
+```
+2. 开启admin GUI界面
+```bash
+# enable web console
+$ rabbitmq-plugins enable rabbitmq_management
+```
+3. add exchange : amq-xlab
+4. add queue : xlab-queue
+
+
+## redis 
+1. 开启远程登录
+```bash
+# 修改Redis配置文件/etc/redis/redis.conf，找到bind那行配置：
+$ vim /etc/redis/redis.conf
+# 注释掉 bind 127.0.0.1
+# 修改 protected-mode no
+
+# 在redis3.2之后，redis增加了protected-mode，默认开启，需要关闭
+```

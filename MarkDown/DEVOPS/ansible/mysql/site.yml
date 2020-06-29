@@ -1,0 +1,61 @@
+- hosts: devel
+  user: wit
+
+  tasks:
+  - name: Pull mysql image
+    docker_image:
+      name: mariadb
+      source: pull
+
+  - name: Run mysql container
+    docker_container:
+      name: ooda-mysql-1
+      image: mariadb
+      state: started
+      ports:
+        - 3366:3306
+      env:
+        MYSQL_ROOT_PASSWORD: "maxwit2020"
+      restart_policy: always
+  
+  # - name: wait
+  #   command: sleep 15
+
+  - name: login mysql user and create user
+    mysql_user:
+      login_user: "root"
+      login_password: "maxwit2020"
+      login_port: 3366
+      name: "wit"
+      password: "maxwit"
+      host: '%'
+      priv: '*.*:ALL'
+      state: present
+
+  - name: create temporary dir
+    tempfile:
+      state: directory
+    register: tmpdir
+  
+  - name: copy sql file
+    copy:
+      src: ./db/router.sql
+      dest: "{{ tmpdir.path }}/router.sql"
+
+  - name: Import DB
+    mysql_db:
+      login_host: "127.0.0.1"
+      login_user: "wit"
+      login_password: "maxwit"
+      login_port: 3366
+      state: import
+      name: "router"
+      target: "{{ tmpdir.path }}/router.sql"
+
+  - name: remove {{ tmpdir }}
+    file:
+      path: '{{ tmpdir.path }}'
+      state: absent
+  
+
+
