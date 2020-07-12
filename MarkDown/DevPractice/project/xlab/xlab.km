@@ -1,0 +1,119 @@
+{
+    "root": {
+        "data": {
+            "id": "c40vfo0p3940",
+            "created": 1594173762021,
+            "text": "redis"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "c40ya02d1sw0",
+                    "created": 1594181781388,
+                    "text": "业务实践 ",
+                    "layout_mind_offset": {
+                        "x": 13,
+                        "y": 87
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c40ye3b4igw0",
+                            "created": 1594182101905,
+                            "text": "简单的业务场景介绍"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c40yegighi80",
+                            "created": 1594182130647,
+                            "text": "选择一个初级业务实践"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "c40ybq7fd7c0",
+                    "created": 1594181916655,
+                    "text": "server ",
+                    "layout_mind_offset": {
+                        "x": 19,
+                        "y": 96
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c40yc918c8g0",
+                            "created": 1594181957640,
+                            "text": "安装"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c40ycbvn3k80",
+                            "created": 1594181963832,
+                            "text": "数据的基本操作"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "c40y8zhypc00",
+                    "created": 1594181701791,
+                    "text": "java demo",
+                    "layout_mind_offset": {
+                        "x": 683,
+                        "y": -102
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c40ycxbprcw0",
+                            "created": 1594182010516,
+                            "text": "redis 连接"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c40yda4hnq80",
+                            "created": 1594182038377,
+                            "text": "最简化使用demo"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c40y9c23wko0",
+                            "created": 1594181729130,
+                            "text": "基本数据类型",
+                            "expandState": "expand"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c40yamdgjeg0",
+                                    "created": 1594181829949,
+                                    "text": "增删改查"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "default",
+    "theme": "fresh-blue",
+    "version": "1.4.43"
+}

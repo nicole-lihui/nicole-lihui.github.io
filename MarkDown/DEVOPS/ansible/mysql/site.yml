@@ -17,19 +17,11 @@
       env:
         MYSQL_ROOT_PASSWORD: "maxwit2020"
       restart_policy: always
-  
-  # - name: wait
-  #   command: sleep 15
 
-  - name: login mysql user and create user
-    mysql_user:
-      login_user: "root"
-      login_password: "maxwit2020"
-      login_port: 3366
-      name: "wit"
-      password: "maxwit"
-      host: '%'
-      priv: '*.*:ALL'
+  - name: Make sure pymysql is present
+    become: true # needed if the other tasks are not played as root
+    pip:
+      name: pymysql
       state: present
 
   - name: create temporary dir
@@ -41,6 +33,20 @@
     copy:
       src: ./db/router.sql
       dest: "{{ tmpdir.path }}/router.sql"
+
+  - name: wait
+    command: sleep 7
+
+  - name: login mysql user and create user
+    mysql_user:
+      login_user: "root"
+      login_password: "maxwit2020"
+      login_port: 3366
+      name: "wit"
+      password: "maxwit"
+      host: '%'
+      priv: '*.*:ALL'
+      state: present
 
   - name: Import DB
     mysql_db:
