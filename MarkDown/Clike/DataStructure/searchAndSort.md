@@ -27,10 +27,11 @@
    * pivot选得不好 O(N^2)
    * 每次pivot比较均匀 O(NlogN)
    * 不稳定
-8. 桶排序 Bucket Sort
+ 
+1. 桶排序 Bucket Sort
    * O(N) 线性时间 （N 与 M【桶个数】差不多）
-9. 基数排序 Radix Sort 【个位， 十位， 百位...】
+2. 基数排序 Radix Sort 【个位， 十位， 百位...】
    * O(k(M + N))
-10. 外部排序 （多采用归并排序）
+3.  外部排序 （多采用归并排序）
 
 
