@@ -1,0 +1,34 @@
+
+tag_group {
+  id: 1,
+  fields: {
+    maxCount: '1',
+    icon: 'http://xxx'
+  }
+  fieldMetadatas: '[
+    {
+      key: 'maxCount'
+      name: 'xxxx',
+      valueType: 'int'
+    },  
+    {
+      key: 'image'
+    }
+  ]'
+
+}
+
+
+tag_group
+id 1
+name
+
+
+tag_group_fields
+tag_group_id: 1
+key: maxCount
+value: 100
+
+tag_group_id: 1
+key: image
+value: http://xxxx

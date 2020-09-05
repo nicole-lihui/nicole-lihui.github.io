@@ -8,3 +8,9 @@
 ### Mac opne option of install anywhere<span id="1"></span>
 >commond:
 >sudo spctl --master-disable
+
+
+### iTem
+```bash
+ brew install cmatrix && cmatrix -a -s
+```

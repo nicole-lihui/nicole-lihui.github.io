@@ -5,7 +5,7 @@
 ```
 $ npm install -g vsce
 $ git clone git@github.com:spring-projects/sts4.git
-$ cd cd sts4/vscode-extensions/boot-dev-pack
+$ cd sts4/vscode-extensions/boot-dev-pack
 $ vsce package
 ```
 **参考文献**
