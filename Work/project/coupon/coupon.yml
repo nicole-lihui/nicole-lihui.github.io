@@ -1,0 +1,567 @@
+swagger: "2.0"
+info:
+  title: 优惠券API
+  version: "1.0"
+host: "localhost"
+basePath: "/v1"
+schemes:
+  - https
+  - http
+paths:
+  /coupon/fetch:
+    post:
+      tags:
+        - "用户优惠券"
+      summary: "领取优惠券"
+      description: "领取优惠券"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "根据用户ID创建一个优惠券的实例"
+          required: true
+          schema:
+            $ref: "#/definitions/FetchCouponRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/Coupon"
+        "405":
+          description: "Invalid input"
+  /coupon/list:
+    get:
+      tags:
+        - "用户优惠券"
+      summary: "查看优惠券实例列表"
+      description: "查看优惠券实例列表"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "shopId"
+          in: "query"
+          description: "店铺ID，为空查询所有，非空查询指定店铺"
+          type: "integer"
+          format: int64
+        - name: "consumed"
+          in: "query"
+          description: "是否使用"
+          type: "boolean"
+          format: "boolean"
+        - name: "expired"
+          in: "query"
+          description: "是否过期"
+          type: "boolean"
+          format: "boolean"
+        - name: "pageNo"
+          in: "query"
+          description: "页码"
+          type: "integer"
+          format: "int32"
+        - name: "pageSize"
+          in: "query"
+          description: "翻页大小，不超过50"
+          type: "integer"
+          format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/Coupon"
+        "405":
+          description: "Invalid input"
+  /coupon/couponTemplate/list:
+    get:
+      tags:
+        - "用户优惠券"
+      summary: "查看店铺的优惠券模版列表"
+      description: "查看店铺的优惠券模版列表"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "shopId"
+          in: "query"
+          type: "integer"
+          format: "int64"
+          required: true
+          description: "店铺ID"
+        - name: "pageNo"
+          in: "query"
+          description: "页码"
+          type: "integer"
+          format: "int32"
+        - name: "pageSize"
+          in: "query"
+          description: "翻页大小，不超过50"
+          type: "integer"
+          format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/CouponTemplate"
+        "405":
+          description: "Invalid input"
+  /merchant/couponTemplate:
+    put:
+      tags:
+      - "商家优惠券"
+      summary: "创建优惠券模版"
+      description: "创建优惠券模版"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "创建优惠券模版"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateCouponTemplateRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/CouponTemplate"
+        "405":
+          description: "Invalid input"
+  /merchant/couponTemplate/list:
+    get:
+      tags:
+        - "商家优惠券"
+      summary: "查看优惠券模版列表"
+      description: "查看优惠券模版列表"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "status"
+          in: "query"
+          description: "优惠券模板状态, UnStart(0), Start(1), End(2) "
+          type: "integer"
+          format: int32
+        - name: "pageNo"
+          in: "query"
+          description: "页码"
+          type: "integer"
+          format: "int32"
+        - name: "pageSize"
+          in: "query"
+          description: "翻页大小，不超过50"
+          type: "integer"
+          format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/CouponTemplate"
+        "405":
+          description: "Invalid input"
+  /merchant/couponTemplate/retrieve/{templateId}:
+    get:
+      tags:
+        - "商家优惠券"
+      summary: "获取优惠券模版详情"
+      description: "获取优惠券模版详情"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "templateId"
+        in: "path"
+        description: "获取优惠券模版详情"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/CouponTemplate"
+        "405":
+          description: "Invalid input"
+
+definitions:
+  Coupon:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        description: 优惠券ID
+      shop:
+        $ref: "#/definitions/SimpleShop"
+      userId:
+        type: "integer"
+        format: "int64"
+        description: 用户ID
+      templateId:
+        type: "integer"
+        format: "int64"
+        description: 券模版ID
+      description:
+        type: "string"
+        format: "string"
+        description: 描述
+      title:
+        type: "string"
+        format: "string"
+        description: 标题
+      channel:
+        type: string
+        format: string
+        description: 领取渠道
+      takeTime:
+        type: "integer"
+        format: "int64"
+        description: 领取时间戳(ms)
+      startTime:
+        type: "integer"
+        format: "int64"
+        description: 使用开始时间戳(ms)
+      endTime:
+        type: "integer"
+        format: "int64"
+        description: 使用结束时间戳(ms)
+      consumed:
+        type: "boolean"
+        format: "boolean"
+        description: 是否已经使用
+      thresholdAmount:
+        type: integer
+        format: int64
+        description: 使用门槛金额（满xxx），单位：分
+      overlay:
+        type: boolean
+        format: boolean
+        description: 是否允许叠加，即每满xxx
+      discountAmount:
+        type: integer
+        format: int64
+        description: 优惠金额（减xxx），单位：分
+      maxDiscountAmount:
+        type: integer
+        format: int64
+        description: 优惠金额上限（最多减xxx），单位：分
+
+  CreateCouponTemplateRequest:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        format: "string"
+        description: 描述
+        example:
+          "描述"
+      title:
+        type: "string"
+        format: "string"
+        description: 标题
+        example:
+          "标题"
+      startTime:
+        type: "integer"
+        format: "int64"
+        description: 领取开始时间戳(ms)，为空不限制开始时间
+        example:
+          10
+      endTime:
+        type: "integer"
+        format: "int64"
+        description: 领取结束时间戳(ms)，为空不限制结束时间
+        example:
+          20
+      discountAmount:
+        type: integer
+        format: int64
+        description: 优惠金额（减xxx），单位：分
+        example:
+          50
+      takeRule:
+        $ref: "#/definitions/TakeRule"
+      consumeRule:
+        $ref: "#/definitions/ConsumeRule"
+
+  CouponTemplate:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        description: 优惠券ID
+      shopId:
+        type: "integer"
+        format: "int64"
+        description: 店铺ID
+      description:
+        type: "string"
+        format: "string"
+        description: 描述
+      title:
+        type: "string"
+        format: "string"
+        description: 标题
+      remainCount: 
+        type: integer
+        format: int32
+        description: 剩余数量
+      takeCount: 
+        type: integer
+        format: int32
+        description: 领取数量
+      consumedCount:
+        type: integer
+        format: int32
+        description: 使用数量
+      startTime:
+        type: "integer"
+        format: "int64"
+        description: 领取开始时间戳(ms)，为空不限制开始时间
+      endTime:
+        type: "integer"
+        format: "int64"
+        description: 领取结束时间戳(ms)，为空不限制结束时间
+      discountAmount:
+        type: integer
+        format: int64
+        description: 优惠金额（减xxx），单位：分
+      takeRule:
+        $ref: "#/definitions/TakeRule"
+      consumeRule:
+        $ref: "#/definitions/ConsumeRule"
+      createTime:
+        type: "integer"
+        format: "int64"
+        description: 创建时间戳(ms)
+
+  FetchCouponRequest:
+    type: "object"
+    properties:
+      shopId:
+        type: "integer"
+        format: "int64"
+        description: 店铺ID
+      templateId:
+        type: "integer"
+        format: "int64"
+        description: 优惠券模版ID
+      channel:
+        type: string
+        format: string
+        description: 领取来源
+
+  TakeRule:
+    type: object
+    description: 领取规则
+    properties: 
+      channels:
+        description: 限制可以领取的渠道，为空不限制
+        type: array
+        items:
+          type: string
+      total:
+        description: 限制发券总数，为0不限制 
+        type: integer
+        format: int32
+        example: 20
+      quota:
+        description: 单用户领取限额，为0不限制
+        type: integer
+        format: int32
+
+  ConsumeRule:
+    type: object
+    description: 使用规则
+    properties: 
+      validTimeType:
+        description: 生成券的时间类型，1：固定时间，2：相对时间
+        type: integer
+        format: int32
+      startTime:
+        type: "integer"
+        format: "int64"
+        description: 固定使用开始时间戳(ms)，为空不限制开始时间
+      endTime:
+        type: "integer"
+        format: "int64"
+        description: 固定使用结束时间戳(ms)，为空不限制开始时间
+      startDelay:
+        type: "integer"
+        format: "int64"
+        description: 相对使用开始时间，即领取后多少毫秒可以开始使用，为0领取后立即可用
+      duration:
+        type: "integer"
+        format: "int64"
+        description: 相对使用时间范围(ms)，即开始后有效期时间范围，为0不限制
+      rangeType:  
+        description: 使用范围 --- 无指定 None(0), 指定Sku SKU(1), 指定品类 CATEGORY(2);
+        type: "integer"
+        format: "int64"
+      productIds:
+        description: 使用范围是sku时，可用的sku列表
+        type: array
+        items:
+          type: integer
+          format: int64
+      categoryIds:
+        description: 使用范围是分类，可用的分类列表
+        type: array
+        items:
+          type: integer
+          format: int64
+      thresholdAmount:
+        type: integer
+        format: int64
+        description: 使用门槛金额（满xxx），单位：分
+      overlay:
+        type: boolean
+        format: boolean
+        description: 是否允许叠加，即每满xxx
+      maxDiscountAmount:
+        type: integer
+        format: int64
+        description: 优惠金额上限（最多减xxx），单位：分
+
+  SimpleShop:
+    type: object
+    description: 店铺概要信息
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        description: 店铺ID
+      name:
+        type: string
+        format: string
+        description: 名称
+      avatar:
+        type: string
+        format: string
+        description: 头像

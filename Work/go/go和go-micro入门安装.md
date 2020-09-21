@@ -9,22 +9,22 @@ $ brew install go
 # check go install info
 $ brew info go
 
+# or .bashrc
 $ cat ~/.zshrc
-export GOPATH=/Users/mac/go
+export GOPATH=~/go
 export GO111MODULE=on
 export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN:$GOROOT/bin
-export GOPROXY=https://goproxy.cn
-
+export $PATH:$GOROOT/bin
+export GOPROXY=https://goproxy.cn,direct
 ```
 
 ## go mirco
 
 ### install go-mirco
 ```bash
-$ go get -u google.golang.org/grpc
+$ go get -u -v google.golang.org/grpc
 $ go get -u -v github.com/micro/micro
-$ go get github.com/micro/protoc-gen-micro
+$ go get -u -v github.com/micro/protoc-gen-micro/v2
 ```
 
 ### install concul
@@ -49,8 +49,8 @@ $ brew install protobuf
 ```bash
 $ mkdir -p $GOPATH/src/gomicro-demo/{proto,server,client}
 ```
-### Proto
 
+### Proto
 ```bash
 $ cd $GOPATH/src/gomicro-demo/proto
 $ go mod init luckfs.com/proto

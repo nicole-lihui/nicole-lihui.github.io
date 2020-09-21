@@ -1,0 +1,1551 @@
+swagger: '2.0'
+info:
+  description: coupon-srv
+  version: 1.0-SNAPSHOT
+  title: coupon-srv
+  contact:
+    name: Luckyfish
+    url: 'http://www.lf.com'
+    email: developer@luckyfish.com
+host: '127.0.0.1:10215'
+basePath: /
+tags:
+  - name: coupon-log-rest
+    description: 优惠券记录服务
+  - name: coupon-rest
+    description: 优惠券服务
+  - name: coupon-template-rest
+    description: 优惠券模版服务
+paths:
+  /coupon/batchTake:
+    post:
+      tags:
+        - coupon-rest
+      summary: 批量领取优惠券
+      operationId: batchTakeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: couponDto
+          description: couponDto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchTakeCouponDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«CouponDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/compute:
+    post:
+      tags:
+        - coupon-rest
+      summary: '计算优惠金额,以及可操作优惠券列表'
+      operationId: computeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/ComputeCouponDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ComputeCouponResultDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/consume:
+    post:
+      tags:
+        - coupon-rest
+      summary: 使用优惠券
+      operationId: consumeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: couponIds
+          description: couponIds
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BaseResponse'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/cursor:
+    post:
+      tags:
+        - coupon-rest
+      summary: 游标查询优惠券
+      operationId: cursorUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: cursorDto
+          description: cursorDto
+          required: true
+          schema:
+            $ref: '#/definitions/CursorQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Cursor«CouponDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/page:
+    post:
+      tags:
+        - coupon-rest
+      summary: 翻页查询优惠券
+      operationId: pageUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CouponDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/recover:
+    post:
+      tags:
+        - coupon-rest
+      summary: 退回优惠券
+      operationId: recoverUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: couponIds
+          description: couponIds
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BaseResponse'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /coupon/take:
+    post:
+      tags:
+        - coupon-rest
+      summary: 领取优惠券
+      operationId: takeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: couponDto
+          description: couponDto
+          required: true
+          schema:
+            $ref: '#/definitions/TakeCouponDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CouponDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponLog/page:
+    post:
+      tags:
+        - coupon-log-rest
+      summary: 翻页查询优惠券日志
+      operationId: pageUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CouponLogDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/batchRetrieve:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 批量查询优惠券模版
+      operationId: batchRetrieveUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«CouponTemplateDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/batchRetrieveByRanges:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 翻页查询优惠券模版
+      operationId: batchRetrieveByRangesUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/RangeQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Map«long,List«CouponTemplateDto»»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/compute:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 计算相关items满足的优惠券活动
+      operationId: computeUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/ComputeCouponTemplateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ComputeCouponTemplateItemDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/create:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 创建优惠券模版
+      operationId: createUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCouponTemplateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CouponTemplateDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/cursor:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 游标查询优惠券模版
+      operationId: cursorUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: cursorDto
+          description: cursorDto
+          required: true
+          schema:
+            $ref: '#/definitions/CursorQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Cursor«CouponTemplateDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /couponTemplate/page:
+    post:
+      tags:
+        - coupon-template-rest
+      summary: 翻页查询优惠券模版
+      operationId: pageUsingPOST_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CouponTemplateDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/couponTemplate/{id}':
+    get:
+      tags:
+        - coupon-template-rest
+      summary: 查询优惠券模版
+      operationId: retrieveUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CouponTemplateDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - coupon-template-rest
+      summary: 删除优惠券模版
+      operationId: deleteUsingDELETE
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+definitions:
+  BaseResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+        format: int32
+    title: BaseResponse
+  BatchTakeCouponDto:
+    type: object
+    required:
+      - couponTemplateId
+      - userId
+    properties:
+      couponTemplateId:
+        type: array
+        description: 批量领取的优惠券活动ID列表
+        # # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      userId:
+        type: integer
+        format: int64
+        description: 领取的用户ID
+        # allowEmptyValue: false
+    title: BatchTakeCouponDto
+  ComputeCouponDto:
+    type: object
+    required:
+      - items
+      - userId
+    properties:
+      couponIds:
+        type: array
+        description: 选择使用的优惠券
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      items:
+        type: array
+        description: 购买物品
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ComputeItemDto'
+      userId:
+        type: integer
+        format: int64
+        description: 用户ID
+        # allowEmptyValue: false
+    title: ComputeCouponDto
+  ComputeCouponItemDto:
+    type: object
+    required:
+      - couponId
+      - selectable
+      - selected
+    properties:
+      couponId:
+        type: integer
+        format: int64
+        description: 优惠券
+        # allowEmptyValue: false
+      selectable:
+        type: boolean
+        example: false
+        description: 是否可以选择使用
+        # allowEmptyValue: false
+      selected:
+        type: boolean
+        example: false
+        description: 是否已经选择使用
+        # allowEmptyValue: false
+      unselectableData:
+        type: object
+        description: 不可选择相关的数据
+        # allowEmptyValue: false
+      unselectableReason:
+        type: string
+        description: 不可选择的原因
+        # allowEmptyValue: false
+    title: ComputeCouponItemDto
+  ComputeCouponResultDto:
+    type: object
+    required:
+      - benefit
+      - bestBenefit
+      - bestCouponIds
+      - coupons
+    properties:
+      benefit:
+        type: integer
+        format: int64
+        description: 优惠金额
+        # allowEmptyValue: false
+      bestBenefit:
+        type: integer
+        format: int64
+        description: 最佳组合的优惠金额
+        # allowEmptyValue: false
+      bestCouponIds:
+        type: array
+        description: 可用的最佳组合优惠券ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      coupons:
+        type: array
+        description: 优惠券列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ComputeCouponItemDto'
+    title: ComputeCouponResultDto
+  ComputeCouponTemplateDto:
+    type: object
+    required:
+      - items
+      - userId
+    properties:
+      items:
+        type: array
+        description: 购买物品
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ComputeItemDto'
+      userId:
+        type: integer
+        format: int64
+        description: 用户ID
+        # allowEmptyValue: false
+    title: ComputeCouponTemplateDto
+  ComputeCouponTemplateItemDto:
+    type: object
+    required:
+      - benefitAmount
+      - canConsume
+      - canTake
+      - couponIds
+      - skuIds
+      - templateId
+    properties:
+      benefitAmount:
+        type: integer
+        format: int64
+        description: 优惠金额
+        # allowEmptyValue: false
+      canConsume:
+        type: boolean
+        example: false
+        description: 是否满足使用条件
+        # allowEmptyValue: false
+      canNotConsumeData:
+        type: object
+        description: 不可使用的相关的数据
+        # allowEmptyValue: false
+      canNotConsumeReason:
+        type: string
+        description: 不可使用的原因
+        # allowEmptyValue: false
+      canTake:
+        type: boolean
+        example: false
+        description: 是否可以领取
+        # allowEmptyValue: false
+      couponIds:
+        type: array
+        description: 关联的已经领取过的优惠券
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      skuIds:
+        type: array
+        description: 可以使用该优惠券的sku
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      templateId:
+        type: integer
+        format: int64
+        description: 优惠券模版
+        # allowEmptyValue: false
+    title: ComputeCouponTemplateItemDto
+  ComputeItemDto:
+    type: object
+    required:
+      - categories
+      - finalAmount
+      - productId
+      - shopId
+      - skuId
+    properties:
+      categories:
+        type: array
+        description: 商品类目ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      cost:
+        type: integer
+        format: int64
+        description: 成本
+        # allowEmptyValue: false
+      discountAmount:
+        type: integer
+        format: int64
+        description: 总价优惠金额
+        # allowEmptyValue: false
+      discountPrice:
+        type: integer
+        format: int64
+        description: 优惠后单价
+        # allowEmptyValue: false
+      finalAmount:
+        type: integer
+        format: int64
+        description: 最终实际总价 finalAmount = discountPrice * num - discountAmount
+        # allowEmptyValue: false
+      finalPrice:
+        type: integer
+        format: int64
+        description: 均摊后单价 finalPrice = finalAmount / num
+        # allowEmptyValue: false
+      num:
+        type: integer
+        format: int32
+        description: 商品数量
+        # allowEmptyValue: false
+      pointsPrice:
+        type: integer
+        format: int64
+        description: 积分兑换单价
+        # allowEmptyValue: false
+      present:
+        type: boolean
+      price:
+        type: integer
+        format: int64
+        description: 原价
+        # allowEmptyValue: false
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      skuId:
+        type: integer
+        format: int64
+        description: Sku的ID
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 商品类型
+        # allowEmptyValue: false
+        minimum: -128
+        maximum: 127
+    title: ComputeItemDto
+  CouponDto:
+    type: object
+    required:
+      - endTime
+      - shopId
+      - startTime
+      - takeTime
+      - template
+      - templateId
+      - userId
+    properties:
+      consumeTime:
+        type: integer
+        format: int64
+        description: 优惠券使用的时间
+        # allowEmptyValue: false
+      consumed:
+        type: boolean
+        example: false
+        description: 使用已使用
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      endTime:
+        type: integer
+        format: int64
+        description: 优惠券可使用的结束时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+      mtime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 所属店铺，如果为空则是平台券
+        # allowEmptyValue: false
+      startTime:
+        type: integer
+        format: int64
+        description: 优惠券可使用的起始时间
+        # allowEmptyValue: false
+      takeTime:
+        type: integer
+        format: int64
+        description: 领取时间
+        # allowEmptyValue: false
+      template:
+        description: 优惠券关联的优惠活动模版
+        # allowEmptyValue: false
+        $ref: '#/definitions/CouponTemplateDto'
+      templateId:
+        type: integer
+        format: int64
+        description: 关联的优惠活动模版的Id
+        # allowEmptyValue: false
+      userId:
+        type: integer
+        format: int64
+        description: 领取用户的Id
+        # allowEmptyValue: false
+    title: CouponDto
+  CouponLogDto:
+    type: object
+    properties:
+      couponId:
+        type: integer
+        format: int64
+        description: 优惠券ID
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 流水日志ID
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: '流水日志类型 0:领取 1:使用 2:退回 '
+        # allowEmptyValue: false
+    title: CouponLogDto
+  CouponTemplateDto:
+    type: object
+    required:
+      - benefitRules
+      - consumedCount
+      - description
+      - endTime
+      - remain
+      - shopId
+      - startTime
+      - takeCount
+      - title
+      - total
+    properties:
+      benefitRules:
+        type: array
+        description: '优惠规则,当用户达到使用条件时,根据此规则生成优惠'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      consumeRules:
+        type: array
+        description: '使用规则,用户需要达到某种条件,才能使用此优惠券'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      consumedCount:
+        type: integer
+        format: int32
+        description: 已使用的优惠券总数
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      deleted:
+        type: boolean
+      description:
+        type: string
+        description: 描述
+        # allowEmptyValue: false
+      dtime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      endTime:
+        type: integer
+        format: int64
+        description: '优惠活动结束时间,不包括结束时间点'
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+      mtime:
+        type: integer
+        format: int64
+        # allowEmptyValue: false
+      rangeType:
+        type: integer
+        format: int32
+        description: '范围规则类型, 0:无指定,1:指定Sku,2:指定品类'
+        # allowEmptyValue: false
+      ranges:
+        type: array
+        description: 范围
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      remain:
+        type: integer
+        format: int32
+        description: 优惠活动剩余可领取的优惠券总量
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 所属店铺，如果为空则是平台券
+        # allowEmptyValue: false
+      startTime:
+        type: integer
+        format: int64
+        description: '优惠活动起始时间,包括该起始时间点'
+        # allowEmptyValue: false
+      takeCount:
+        type: integer
+        format: int32
+        description: 已领取的优惠券总数
+        # allowEmptyValue: false
+      takeRules:
+        type: array
+        description: '领取规则,用户需要达到某种条件,才能领取此优惠券'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      title:
+        type: string
+        description: 标题
+        # allowEmptyValue: false
+      total:
+        type: integer
+        format: int32
+        description: 优惠活动可领取的优惠券总量
+        # allowEmptyValue: false
+    title: CouponTemplateDto
+  CreateCouponTemplateDto:
+    type: object
+    required:
+      - benefitRules
+      - description
+      - shopId
+      - title
+    properties:
+      benefitRules:
+        type: array
+        description: '优惠规则,当用户达到使用条件时,根据此规则生成优惠'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      consumeRules:
+        type: array
+        description: '使用规则,用户需要达到某种条件,才能使用此优惠券'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      description:
+        type: string
+        description: 描述
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 所属店铺，如果为空则是平台券
+        # allowEmptyValue: false
+      takeRules:
+        type: array
+        description: '领取规则,用户需要达到某种条件,才能领取此优惠券'
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/Map«string,object»'
+      title:
+        type: string
+        description: 标题
+        # allowEmptyValue: false
+    title: CreateCouponTemplateDto
+  CursorExtraDto:
+    type: object
+    required:
+      - hasMore
+      - max
+      - min
+      - totalCount
+    properties:
+      hasMore:
+        type: boolean
+        example: false
+        description: 是否还有
+        # allowEmptyValue: false
+      max:
+        type: object
+        description: 最大值
+        # allowEmptyValue: false
+      min:
+        type: object
+        description: 最小值
+        # allowEmptyValue: false
+      totalCount:
+        type: integer
+        format: int64
+        description: 总数
+        # allowEmptyValue: false
+    title: CursorExtraDto
+  CursorQueryDto:
+    type: object
+    required:
+      - cursor
+      - cursorSort
+      - direction
+      - filters
+      - size
+    properties:
+      cursor:
+        type: object
+        description: '游标属性(1:游标从前向后移动 0:游标从后向前移动)'
+        # allowEmptyValue: false
+      cursorSort:
+        description: 排序
+        # allowEmptyValue: false
+        $ref: '#/definitions/SortSpecDto'
+      direction:
+        type: integer
+        format: int32
+        description: 游标方向
+        # allowEmptyValue: false
+      filters:
+        type: object
+        description: 过滤条件
+        # allowEmptyValue: false
+      size:
+        type: integer
+        format: int32
+        description: 分页大小
+        # allowEmptyValue: false
+    title: CursorQueryDto
+  Cursor«CouponDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CursorExtraDto'
+    title: Cursor«CouponDto»
+  Cursor«CouponTemplateDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponTemplateDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CursorExtraDto'
+    title: Cursor«CouponTemplateDto»
+  DataResponse«ComputeCouponResultDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/ComputeCouponResultDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«ComputeCouponResultDto»
+    description: 返回数据
+  DataResponse«CouponDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CouponDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«CouponDto»
+    description: 返回数据
+  DataResponse«CouponTemplateDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CouponTemplateDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«CouponTemplateDto»
+    description: 返回数据
+  DataResponse«Cursor«CouponDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Cursor«CouponDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Cursor«CouponDto»»
+    description: 返回数据
+  DataResponse«Cursor«CouponTemplateDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Cursor«CouponTemplateDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Cursor«CouponTemplateDto»»
+    description: 返回数据
+  DataResponse«List«ComputeCouponTemplateItemDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ComputeCouponTemplateItemDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«ComputeCouponTemplateItemDto»»
+    description: 返回数据
+  DataResponse«List«CouponDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«CouponDto»»
+    description: 返回数据
+  DataResponse«List«CouponTemplateDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponTemplateDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«CouponTemplateDto»»
+    description: 返回数据
+  'DataResponse«Map«long,List«CouponTemplateDto»»»':
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: object
+        description: 返回数据
+        # allowEmptyValue: false
+        additionalProperties:
+          type: array
+          items:
+            $ref: '#/definitions/CouponTemplateDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: 'DataResponse«Map«long,List«CouponTemplateDto»»»'
+    description: 返回数据
+  DataResponse«Page«CouponDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«CouponDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«CouponDto»»
+    description: 返回数据
+  DataResponse«Page«CouponLogDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«CouponLogDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«CouponLogDto»»
+    description: 返回数据
+  DataResponse«Page«CouponTemplateDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«CouponTemplateDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«CouponTemplateDto»»
+    description: 返回数据
+  'Map«long,List«CouponTemplateDto»»':
+    type: object
+    title: 'Map«long,List«CouponTemplateDto»»'
+    additionalProperties:
+      type: array
+      items: 
+        $ref: "#/definitions/CouponTemplateDto"
+      # $ref: '#/definitions/List'
+  'Map«string,object»':
+    type: object
+    title: 'Map«string,object»'
+    additionalProperties:
+      type: object
+  PageExtraDto:
+    type: object
+    required:
+      - pageNo
+      - pageSize
+      - totalCount
+    properties:
+      pageNo:
+        type: integer
+        format: int32
+        description: 当前页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 翻页大小
+        # allowEmptyValue: false
+      totalCount:
+        type: integer
+        format: int64
+        description: 总数
+        # allowEmptyValue: false
+    title: PageExtraDto
+  PageQueryDto:
+    type: object
+    properties:
+      filters:
+        type: object
+        description: 过滤条件
+        # allowEmptyValue: false
+      pageNo:
+        type: integer
+        format: int32
+        description: 页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 页数
+        # allowEmptyValue: false
+      sort:
+        type: array
+        description: 排序
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SortSpecDto'
+    title: PageQueryDto
+  Page«CouponDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«CouponDto»
+  Page«CouponLogDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponLogDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«CouponLogDto»
+  Page«CouponTemplateDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CouponTemplateDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«CouponTemplateDto»
+  RangeQueryDto:
+    type: object
+    required:
+      - filters
+      - rangeFilters
+      - rangeType
+      - ranges
+    properties:
+      filters:
+        type: object
+        description: '过滤条件,同page接口参数中filter'
+        # allowEmptyValue: false
+      rangeFilters:
+        type: object
+        description: '过滤条件,同page接口参数中filter'
+        # allowEmptyValue: false
+      rangeType:
+        type: integer
+        format: int32
+        description: '过滤的范围类型,同范围规则类型 1:sku 2:category'
+        # allowEmptyValue: false
+      ranges:
+        type: array
+        description: '过滤的id列表,1:sku的id列表 2:category的id列表'
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+    title: RangeQueryDto
+  Result:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0表示成功
+        # allowEmptyValue: false
+      msg:
+        type: string
+        description: 错误信息
+        # allowEmptyValue: false
+    title: Result
+  SortSpecDto:
+    type: object
+    required:
+      - ignoreCase
+      - property
+      - type
+    properties:
+      ignoreCase:
+        type: boolean
+        example: false
+        description: '是否忽略大小写,默认忽略'
+        # allowEmptyValue: false
+      property:
+        type: string
+        description: 排序属性
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: '排序类型,由小到大：ASC,由大到小：DSC,默认:DEFAULT'
+        # allowEmptyValue: false
+    title: SortSpecDto
+  TakeCouponDto:
+    type: object
+    required:
+      - couponTemplateId
+      - userId
+    properties:
+      couponTemplateId:
+        type: integer
+        format: int64
+        description: 领取的优惠券活动ID
+        # allowEmptyValue: false
+      userId:
+        type: integer
+        format: int64
+        description: 领取的用户ID
+        # allowEmptyValue: false
+    title: TakeCouponDto
