@@ -21,10 +21,10 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: "下单"
+          description: "结算信息"
           required: true
           schema:
-            $ref: "#/definitions/ConfirmCashier"
+            $ref: "#/definitions/CashierRequest"
       responses:
         "200":
           description: "successful operation"
@@ -38,10 +38,11 @@ paths:
                 type: string
                 format: string
               data:
-                $ref: "#/definitions/ConfirmCashier"
+                $ref: "#/definitions/CashierResponse"
         "405":
           description: "Invalid input"
-  /cashier/check:
+
+  /cashier/checkout:
     post:
       tags:
         - "订单结算"
@@ -54,10 +55,10 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: "订单检查"
+          description: "结算信息"
           required: true
           schema:
-            $ref: "#/definitions/CashierCheckRequest"
+            $ref: "#/definitions/CashierRequest"
       responses:
         "200":
           description: "successful operation"
@@ -71,33 +72,33 @@ paths:
                 type: string
                 format: string
               data:
-                $ref: "#/definitions/CashierCheckRsp"
+                $ref: "#/definitions/CheckoutResponse"
         "405":
           description: "Invalid input"
-
-  /order/detail:
-    get:
+  
+  /cashier/pay:
+    post:
       tags:
-        - "订单详情"
-      summary: "订单详情"
-      description: "订单详情"
+        - "订单结算"
+      summary: "订单支付"
+      description: "订单支付"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "orderId"
-        in: "query"
-        description: "订单详情"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: "id"
+          in: "path"
+          description: "支付订单ID"
+          required: true
+          type: "string"
+          format: "string"
       responses:
         "200":
           description: "successful operation"
           schema:
             type: object
-            properties: 
+            properties:
               code:
                 type: integer
                 format: int64
@@ -105,30 +106,56 @@ paths:
                 type: string
                 format: string
               data:
-                $ref: "#/definitions/OrderDetailRsp"
+                $ref: "#/definitions/PayResponse"
         "405":
           description: "Invalid input"
 
 definitions:
-  ConfirmCashierRequest:
+  CashierRequest:
     type: "object"
     properties:
-      shop:
-        description: 交易店铺
+      trades:
+        description: 交易物品信息
         type: array
-        items:  
-          $ref: "#/definitions/CashierItemsRequest"
-      address: 
-        $ref: "#/definitions/Address"
-      paymentMethod:
-        description: 交易方式
-        type: integer
-        format: int32
+        items:
+          $ref: "#/definitions/CashierTradeRequest"
+      delivery:
+        description: 发货信息
+        type: object
+        properties:
+          address:
+            $ref: "#/definitions/Address"
       payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPaymentRequest"
+        description: 支付信息
+        type: object
+        properties:
+          method:
+            description: 支付方式
+            type: integer
+            format: int32
+      ump:
+        description: 营销信息
+        type: object
+        properties:
+          coupons:
+            description: 使用的优惠券
+            type: array
+            items:
+              type: string
+      source:
+        description: 交易来源信息
+        type: object
+        properties:
+          platform:
+            description: 平台
+            type: string
+            format: string
+          platformAppId:
+            description: 平台AppId
+            type: string
+            format: string
 
-  CashierItemsRequest:
+  CashierTradeRequest:
     type: "object"
     properties:
       shopId:
@@ -142,20 +169,20 @@ definitions:
       items:
         description: 商品列表
         type: array
-        items: 
-          $ref: "#/definitions/ConfirmCashierTradeGoodRequest"
-      payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPaymentRequest"
-      coupons:
-        description: 优惠券列表
-        type: array
-        items: 
-          $ref: "#/definitions/ConfirmCashierCouponRequest"
-      
-  ConfirmCashierTradeGoodRequest:
+        items:
+          $ref: "#/definitions/CashierTradeItemRequest"
+      ump:
+        type: object
+        properties:
+          coupons:
+            description: 使用的店铺优惠券列表
+            type: array
+            items:
+              type: string
+
+  CashierTradeItemRequest:
     type: object
-    properties: 
+    properties:
       skuId:
         type: "integer"
         format: "int64"
@@ -168,170 +195,141 @@ definitions:
         type: "integer"
         format: "int64"
         description: 数量
-      type:
-        type: "integer"
-        format: "int64"
-        description: 类型
-  
-  CashierPaymentRequest:
-    type: object
-    properties: 
-      # total:
-      #   description: 总价
-      #   type: integer
-      #   format: int64
-      discount:
-        description: 总优惠
-        type: integer
-        format: int64
-      # postage:
-      #   description: 邮费
-      #   type: integer
-      #   format: int64
-      originPostage:
-        description: 原始邮费
-        type: integer
-        format: int64
-      # final:
-      #   description: 应支付金额
-      #   type: integer
-      #   format: int64
 
-  ConfirmCashierCouponRequest:
-    type: object
-    properties: 
-      id:
-        type: "integer"
-        format: "int64"
-        description: 优惠券ID
-      templateId:
-        type: "integer"
-        format: "int64"
-        description: 券模版ID
-      # userId:
-      #   type: "integer"
-      #   format: "int64"
-      #   description: 用户ID
-      # shop:
-      #   $ref: "#/definitions/SimpleShop"
-      description:
-        type: "string"
-        format: "string"
-        description: 描述
-      title:
-        type: "string"
-        format: "string"
-        description: 标题
-      available:
-        type: "boolean"
-        format: "boolean"
-        description: 是否可用
-      selectable:
-        type: "boolean"
-        format: "boolean"
-        description: 是否已选
-      channel:
-        type: string
-        format: string
-        description: 领取渠道
-      # takeTime:
-      #   type: "integer"
-      #   format: "int64"
-      #   description: 领取时间戳(ms)
-      # startTime:
-      #   type: "integer"
-      #   format: "int64"
-      #   description: 使用开始时间戳(ms)
-      # endTime:
-      #   type: "integer"
-      #   format: "int64"
-      #   description: 使用结束时间戳(ms)
-      # thresholdAmount:
-      #   type: integer
-      #   format: int64
-      #   description: 使用门槛金额（满xxx），单位：分
-      # overlay:
-      #   type: boolean
-      #   format: boolean
-      #   description: 是否允许叠加，即每满xxx
-      # discountAmount:
-      #   type: integer
-      #   format: int64
-      #   description: 优惠金额（减xxx），单位：分
-      # maxDiscountAmount:
-      #   type: integer
-      #   format: int64
-      #   description: 优惠金额上限（最多减xxx），单位：分
-  
+  CashierResponse:
+    type: "object"
+    properties:
+      trades:
+        description: 交易物品信息
+        type: array
+        items:
+          $ref: "#/definitions/CashierTradeResponse"
+      delivery:
+        type: object
+        properties:
+          address:
+            $ref: "#/definitions/Address"
+      payment:
+        description: 支付信息
+        type: object
+        properties:
+          methodOptions:
+            description: 支付方式选项
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  format: string
+                  description: 支付方式名称
+                value:
+                  type: integer
+                  format: int32
+                  description: 支付方式
+          method:
+            description: 选择的支付方式
+            type: integer
+            format: int32
+          total:
+            description: 总价
+            type: integer
+            format: int64
+          discount:
+            description: 总优惠
+            type: integer
+            format: int64
+          postage:
+            description: 邮费
+            type: integer
+            format: int64
+          final:
+            description: 应支付金额
+            type: integer
+            format: int64
+      ump:
+        description: 营销信息
+        type: object
+        properties:
+          coupons:
+            description: 平台优惠券列表
+            type: array
+            items:
+              $ref: "#/definitions/Coupon"
 
-
-
-
-
-
-  ConfirmCashier:
+  CashierTradeResponse:
     type: "object"
     properties:
       shop:
-        description: 交易店铺
-        type: array
-        items:  
-          $ref: "#/definitions/CashierItems"
-      address: 
-        $ref: "#/definitions/Address"
-      paymentMethod:
-        description: 交易方式
-        type: integer
-        format: int32
-      payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPayment"
-
-  CashierItems:
-    type: "object"
-    properties:
-      shopId:
-        type: "integer"
-        format: "int64"
-        description: 店铺ID
+        description: 店铺信息
+        $ref: "#/definitions/SimpleShop"
       remark:
-        description: 备注
+        description: 用户备注
         type: string
         format: string
       items:
         description: 商品列表
         type: array
-        items: 
-          $ref: "#/definitions/TradeGood"
+        items:
+          $ref: "#/definitions/CashierTradeItemResponse"
       payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPayment"
-      coupons:
-        description: 优惠券列表
-        type: array
-        items: 
-          $ref: "#/definitions/Coupon"
-      
-  TradeGood:
+        description: 价格信息
+        $ref: "#/definitions/CashierTradePaymentResponse"
+      ump:
+        description: 营销信息
+        type: object
+        properties:
+          coupons:
+            description: 店铺优惠券列表
+            type: array
+            items:
+              $ref: "#/definitions/Coupon"
+
+  CashierTradePaymentResponse:
+    description: 交易金额信息
     type: object
-    properties: 
-      skuId:
-        type: "integer"
-        format: "int64"
-        description: 规格ID
+    properties:
+      total:
+        description: 总金额
+        type: integer
+        format: int64
+      discount:
+        description: 优惠金额
+        type: integer
+        format: int64
+      postage:
+        description: 运费
+        type: integer
+        format: int64
+      final:
+        description: 应支付金额：final = total - discount + postage
+        type: integer
+        format: int64
+
+  CashierTradeItemResponse:
+    type: object
+    properties:
       productId:
         type: "integer"
         format: "int64"
         description: 商品ID
+      skuId:
+        type: "integer"
+        format: "int64"
+        description: 规格ID
+      type:
+        type: "integer"
+        format: "int64"
+        description: 类型
       title:
-        description: 商品名称
+        description: 商品标题
         type: string
         format: string
       specs:
         description: 商品规格描述
         type: string
         format: string
-      price: 
+      price:
         description: 商品单价
         type: "integer"
         format: "int64"
@@ -343,26 +341,18 @@ definitions:
         type: "integer"
         format: "int64"
         description: 数量
-      amount:
-        type: "integer"
-        format: "int64"
-        description: 价格 （price * quantity）
-      thumbnail:
-        description: 商品缩图
-        type: string
-        format: string
       image:
         description: 商品图片
         type: string
         format: string
-      type:
-        type: "integer"
-        format: "int64"
-        description: 类型
-  
-  CashierPayment:
+      stock:
+        description: 库存量
+        type: integer
+        format: int32
+
+  CashierPaymentResponse:
     type: object
-    properties: 
+    properties:
       total:
         description: 总价
         type: integer
@@ -386,13 +376,11 @@ definitions:
 
   Coupon:
     type: object
-    properties: 
+    properties:
       id:
         type: "integer"
         format: "int64"
         description: 优惠券ID
-      shop:
-        $ref: "#/definitions/SimpleShop"
       userId:
         type: "integer"
         format: "int64"
@@ -413,7 +401,7 @@ definitions:
         type: "boolean"
         format: "boolean"
         description: 是否可用
-      selectable:
+      selected:
         type: "boolean"
         format: "boolean"
         description: 是否已选
@@ -449,7 +437,7 @@ definitions:
         type: integer
         format: int64
         description: 优惠金额上限（最多减xxx），单位：分
-  
+
   SimpleShop:
     type: object
     description: 店铺概要信息
@@ -469,7 +457,7 @@ definitions:
 
   Address:
     type: object
-    properties: 
+    properties:
       id:
         description: 地址ID
         type: integer
@@ -490,509 +478,45 @@ definitions:
         description: 邮编
         type: integer
         format: int64
-      province: 
+      province:
         description: 省
         type: string
         format: string
-      city: 
+      city:
         description: 市
         type: string
         format: string
-      district: 
+      district:
         description: 县/区
         type: string
         format: string
-      Address:
+      address:
         description: 具体地址（具体的门牌号）
         type: string
         format: string
 
-
-  CashierCheckRequest:
-    type: "object"
+  CheckoutResponse:
+    type: object
     properties:
-      address: 
-        $ref: "#/definitions/Address"
-      paymentMethod:
-        description: 交易方式
-        type: integer
-        format: int32
-      payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPayment"
-      trades:
-        description: 交易商品
-        type: array
-        items:  
-          $ref: "#/definitions/CashierItemsCheckRsp"
-
-  CashierItemsCheckRsp:
-    type: "object"
-    properties:
-      shopId:
-        type: "integer"
-        format: "int64"
-        description: 店铺ID
-      remark:
-        description: 备注
+      payOrderId:
         type: string
         format: string
-      items:
-        description: 商品列表
-        type: array
-        items: 
-          $ref: "#/definitions/CheckTradeGood"
-      payment:
-        description: 计算价格
-        $ref: "#/definitions/CashierPayment"
-      couponsIds:
-        description: 优惠券列表
-        type: array
-        items: 
-          type: "integer"
-          format: "int64"
-          description: 优惠券ID
-      
-  CheckTradeGood:
-    type: object
-    properties: 
-      skuId:
-        type: "integer"
-        format: "int64"
-        description: 商品ID
-      productId:
-        type: "integer"
-        format: "int64"
-        description: 产品ID
-      price: 
-        description: 商品单价
-        type: "integer"
-        format: "int64"
-      discountPrice:
-        description: 优惠后单价
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int64"
-        description: 数量
-      amount:
-        type: "integer"
-        format: "int64"
-        description: 价格 （price * quantity）
-
-  CashierCheckRsp:
-    type: object
-    properties: 
+        description: 支付订单ID
       orderIds:
         type: array
-        items: 
-          type: integer
-          format: "int64"
+        items:
+          type: string
+          format: "string"
           description: 订单ID
 
-  OrderDetailRsp:
+  PayResponse:
     type: object
     properties: 
-      id:
-        type: "integer"
-        format: "int64"
-        description: 订单ID
-      orderSource: 
-        description: 订单平台详情
-        $ref:  "#/definitions/OrderSource"
-      remarks: 
-        description: 备注
-        $ref:  "#/definitions/Remark"
-      shop:
-        description: 店铺信息
-        $ref:  "#/definitions/SimpleShop"
-      state:
-        type: "string"
-        format: "string"
-        description: 交易状态
-      stateDesc:
-        type: "string"
-        format: "string"
-        description: 交易状态描述
-      actions: 
-        description: 记录用户的活动
-        type: array
-        items: 
-          type: string
-      items: 
-        description: 交易商品
-        $ref:  "#/definitions/OrderDetailItem"
-      isAllRefund:
-        description: 是否所有商品都退款成功
-        type: boolean
-        format: boolean
-      deliveryOrders:
-        description: 物流信息
-        type: array
-        items: 
-          $ref: "#/definitions/DeliveryDist"
-      payExpireAt:
-        type: "integer"
-        format: "int64"
-        description: 付款过期时间
-      deliveryExpireAt:
-        type: "integer"
-        format: "int64"
-        description: 发货过期时间
-      receiveExpireAt:
-        type: "integer"
-        format: "int64"
-        description: 收货过期时间
-      presaleTime:
-        type: "integer"
-        format: "int64"
-        description: 收货过期时间
-      payTime:
-        type: "integer"
-        format: "int64"
-        description: 付款时间
-      deliveryTime:
-        type: "integer"
-        format: "int64"
-        description: 物流预期交货时间
-      deliveredTime:
-        type: "integer"
-        format: "int64"
-        description: 物流实际交货时间
-      closeTime:
-        type: "integer"
-        format: "int64"
-        description: 交易关闭时间
-      promotions: 
-        description: 优惠信息
-        $ref:  "#/definitions/Promotion"
-      # coupons:
-      #   description: 优惠券列表
-      #   type: array
-      #   items: 
-      #     $ref: "#/definitions/SimpleCoupon"
-
-      # paymentMethod:
-      #   type: integer
-      #   format: int32
-      #   description: 交易方式
-      # payment:
-      #   description: 计算价格
-      #   $ref: "#/definitions/CashierPayment"
-      # trades:
-      #   description: 交易商品
-      #   type: array
-      #   items:  
-      #     $ref: "#/definitions/OrderTradeItem"
-      # buyerInfo:
-      #   description: 买家信息
-      #   $ref: "#/definitions/OrderBuyer"
-
-  DeliveryDist:
-    type: object
-    properties: 
-      id:
-        description: 物流ID
-        type: integer
-        format: int64
-      deliveryOrderId: 
-        description: 物流订单ID
+      method:
         type: string
         format: string
-      orderId: 
-        description: 订单ID
-        type: string
-        format: string
-      express:
-        description: 物流公司
-        type: string
-        format: string
-      expressNo:
-        description: 快递单号
-        type: string
-        format: string
-      ctime:
-        description: 创建时间
-        type: integer
-        format: int64
-      utime:
-        description: 更新时间
-        type: integer
-        format: int64
-      traces:
-        description: 物流足迹信息
-        type: string
-        format: string
-
-  OrderSource:
-    type: object
-    properties: 
-      id:
-        description: 来源ID
-        type: integer
-        format: int64
-      platform:
-        description: 来源平台，如微信公众号
-        type: string
-        format: string
-      platformId:
-        description: 来源平台ID，如微信公众号ID
-        type: string
-        format: string
-      appId:
-        description: 下单应用
-        type: string
-        format: string
-      channel:
-        description: 来源渠道
-        type: string
-        format: string
-
-  Remark:
-    type: object
-    properties: 
-      id:
-        description: 备注ID
-        type: integer
-        format: int64
-      type:
-        description: 备注类型：0 => 买家备注，1 => 卖家备注
-        type: integer
-        format: int64
-      creatorType:
-        description: 备注人类型
-        type: string
-        format: string
-      creatorId:
-        description: 备注人ID
-        type: integer
-        format: int64
-      creatorName:
-        description: 备注人名字
-        type: string
-        format: string
-      content:
-        description: 内容
-        type: string
-        format: string
-      ctime:
-        description: 创建时间
-        type: integer
-        format: int64
-      utime: 
-        description: 最近修改时间
-        type: integer
-        format: int64
-
-  Promotion: 
-    type: object
-    properties: 
-      id:
-        description: 优惠ID
-        type: integer
-        format: int64
-      type:
-        description: 促销类型，如 internalBuy（内购价）、luckyBag（福袋价）等
-        type: string
-        format: string
-      orderItemId:
-        description: 关联订单物品ID，如果为空是订单级别促销，不为空是商品级别促销
-        type: integer
-        format: int64
-      referId:
-        description: 关联的业务ID，比如内购价格记录ID，福袋价格记录ID等
-        type: integer
-        format: int64
-      title:
-        description: 优惠标题
-        type: string
-        format: string
-      description:
-        description: 优惠内容文字描述
-        type: string
-        format: string
-      discountPrice:
-        description: 商品级别促销时，商品的促销单价
-        type: integer
-        format: int64
-      discountAmount: 
-        description: 商品级别促销时，商品的优惠金额；订单级别促销时，订单的优惠金额
-        type: integer
-        format: int64
-  # SimpleCoupon:
-  #   type: object
-  #   properties: 
-  #     id:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 优惠券ID
-  #     title:
-  #       type: "string"
-  #       format: "string"
-  #       description: 标题
-  #     startTime:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 使用开始时间戳(ms)
-  #     endTime:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 使用结束时间戳(ms)
-  #     thresholdAmount:
-  #       type: integer
-  #       format: int64
-  #       description: 使用门槛金额（满xxx），单位：分
-  #     discountAmount:
-  #       type: integer
-  #       format: int64
-  #       description: 优惠金额（减xxx），单位：分
-  #     maxDiscountAmount:
-  #       type: integer
-  #       format: int64
-  #       description: 优惠金额上限（最多减xxx），单位：分
-
-  OrderDetailItem:
-    type: object
-    properties: 
-      id:
-        type: "integer"
-        format: "int64"
-        description: 订单物品ID
-      skuId:
-        type: "integer"
-        format: "int64"
-        description: 商品ID
-      productId:
-        type: "integer"
-        format: "int64"
-        description: 产品ID
-      title:
-        description: 商品名称
-        type: string
-        format: string
-      specs:
-        description: 商品规格描述
-        type: string
-        format: string
-      weight:
-        description: 商品宽
-        type: "integer"
-        format: "int64"
-      picture: 
-        description: 商品图片
-        type: string
-        format: string
-      url:
-        description: 商品Url
-        type: string
-        format: string
-      num:
-        description: 商品数量
-        type: "integer"
-        format: "int64"
-      price: 
-        description: 原价
-        type: "integer"
-        format: "int64"
-      discountPrice: 
-        description: 优惠后价格
-        type: "integer"
-        format: "int64"
-      finalPrice: 
-        description: 均摊后价格 finalPrice = finalAmount / num
-        type: "integer"
-        format: "int64"
-      discountAmount: 
-        description: 总价优惠
-        type: "integer"
-        format: "int64"
-      finalAmount: 
-        description: 最终实际总价 discountPrice * num - discountAmount
-        type: "integer"
-        format: "int64"
-      remark:
-        description: 用户备注
-        type: string
-        format: string
-      refund:
-        description: 关联退款单
-        type: string
-        format: string
-      state:
-        description: 状态
-        type: string
-        format: string
-      actions:
-        description: 记录用户的活动
-        type: array
-        items: 
-          type: string
-
-
-  # OrderBuyer:
-  #   type: object
-  #   properties: 
-  #     buyerId:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 买家ID
-  #     buyerPhone:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 买家电话
-  #     name:
-  #       type: "string"
-  #       format: "string"
-  #       description: 买家姓名
+        description: 支付方式
+      params:
+        type: object
+        description: 支付参数
       
-
-  # OrderTradeItem:
-  #   type: "object"
-  #   properties:
-  #     items:
-  #       description: 商品列表
-  #       type: array
-  #       items: 
-  #         $ref: "#/definitions/TradeGood"
-  #     payment:
-  #       description: 计算价格
-  #       $ref: "#/definitions/CashierPayment"
-  #     coupons:
-  #       description: 优惠券列表
-  #       type: array
-  #       items: 
-  #         $ref: "#/definitions/SimpleCoupon"
-
-  # OrderTradeGood:
-  #   type: object
-  #   properties: 
-  #     skuId:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 商品ID
-  #     productId:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 产品ID
-  #     title:
-  #       description: 商品名称
-  #       type: string
-  #       format: string
-  #     price: 
-  #       description: 商品单价
-  #       type: "integer"
-  #       format: "int64"
-  #     discountPrice:
-  #       description: 优惠后单价
-  #       type: "integer"
-  #       format: "int64"
-  #     quantity:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 数量
-  #     amount:
-  #       type: "integer"
-  #       format: "int64"
-  #       description: 价格 （price * quantity）
-
