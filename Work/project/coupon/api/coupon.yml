@@ -370,6 +370,10 @@ definitions:
         type: integer
         format: int64
         description: 优惠金额上限（最多减xxx），单位：分
+      rangeType:  
+        description: 使用范围 --- 无指定 None(0), 指定Sku SKU(1), 指定品类 CATEGORY(2);
+        type: "integer"
+        format: "int64"
 
   CreateCouponTemplateRequest:
     type: "object"

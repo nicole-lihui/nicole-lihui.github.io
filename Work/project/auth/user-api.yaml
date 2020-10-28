@@ -1,0 +1,1703 @@
+swagger: "2.0"
+info:
+  title: XAuthing认证服务用户API
+  version: "1.0"
+host: "localhost"
+basePath: "/user/v1"
+schemes:
+  - https
+  - http
+paths:
+  /user/create:
+    post:
+      tags:
+        - "User"
+      summary: "创建用户"
+      description: "创建用户"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "根据用户信息创建用户"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateUserRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/User"
+        "405":
+          description: "Invalid input"
+  /user/findOne/{userId}:
+    get:
+      tags:
+        - "User"
+      summary: "查询用户"
+      description: "查询用户通过用户ID"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "查询用户通过用户ID"
+        required: true
+        type: "string"
+        format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/User"
+        "405":
+          description: "Invalid input"
+  /user/list:
+    post:
+      tags:
+        - "User"
+      summary: "批量查询用户"
+      description: "批量查询用户通过userId"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量查询用户通过userId"
+          required: true
+          schema:
+            $ref: "#/definitions/FindUsersRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/User"
+        "405":
+          description: "Invalid input"
+  /user/update:
+    put:
+      tags:
+        - "User"
+      summary: "更新用户"
+      description: "更新用户，需要全部的信息"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "更新用户"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateUserRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/User"
+        "405":
+          description: "Invalid input"
+  /user/delete/{userId}:
+    delete:
+      tags:
+        - "User"
+      summary: "删除用户"
+      description: "删除用户"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "删除用户"
+          required: true
+          type: "string"
+          format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  /user/batchDelete:
+    delete:
+      tags:
+        - "User"
+      summary: "批量删除用户"
+      description: "批量删除用户通过userId"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量删除用户通过userId"
+          required: true
+          schema:
+            $ref: "#/definitions/BatchDeleteUserRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  /user/page:
+    post:
+      tags:
+        - "User"
+      summary: "Page查询用户"
+      description: "Page查询用户"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Page查询用户"
+          required: true
+          schema:
+            $ref: "#/definitions/PageRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/User"
+        "405":
+          description: "Invalid input"
+  /userPool/create:
+    post:
+      tags:
+        - "UserPool"
+      summary: "创建用户池"
+      description: "创建用户池"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "根据用户信息创建用户池"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateUserPoolRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/UserPool"
+        "405":
+          description: "Invalid input"
+  /userPool/findOne/{userPoolId}:
+    get:
+      tags:
+        - "UserPool"
+      summary: "查询用户池"
+      description: "查询用户池通过用户池ID"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userPoolId"
+        in: "path"
+        description: "查询用户池通过用户池ID"
+        required: true
+        type: "string"
+        format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/UserPool"
+        "405":
+          description: "Invalid input"
+  /userPool/list:
+    post:
+      tags:
+        - "UserPool"
+      summary: "批量查询用户池"
+      description: "批量查询用户通过userPoolId"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量查询用户池通过userPoolId"
+          required: true
+          schema:
+            $ref: "#/definitions/FindUsersRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/UserPool"
+        "405":
+          description: "Invalid input"
+  /userPool/update:
+    put:
+      tags:
+        - "UserPool"
+      summary: "更新用户池"
+      description: "更新用户池"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "更新用户池"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateUserPoolRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/UserPool"
+        "405":
+          description: "Invalid input"
+  /userPool/delete/{userPoolId}:
+    delete:
+      tags:
+        - "UserPool"
+      summary: "删除用户池"
+      description: "删除用户池"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userPoolId"
+          in: "path"
+          description: "删除用户池"
+          required: true
+          type: "string"
+          format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  /userPool/batchDelete:
+    delete:
+      tags:
+        - "UserPool"
+      summary: "批量删除用户池"
+      description: "批量删除用户池通过userPoolId"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量删除用户池通过userPoolId"
+          required: true
+          schema:
+            $ref: "#/definitions/BatchDeleteUserPoolRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  
+  /thirdPartyIdentity/create:
+    post:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "创建第三方认证"
+      description: "创建第三方认证"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "根据用户信息创建第三方认证"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateThirdPartyIdentityRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/ThirdPartyIdentity"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/findOne/{thirdPartyIdentityId}:
+    get:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "查询用户池"
+      description: "查询第三方认证通过第三方认证ID"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thirdPartyIdentityId"
+        in: "path"
+        description: "查询第三方认证通过第三方认证ID"
+        required: true
+        type: "string"
+        format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/ThirdPartyIdentity"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/list:
+    post:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "批量查询第三方认证"
+      description: "批量查询第三方认证通过ID"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量查询第三方认证通过ID"
+          required: true
+          schema:
+            $ref: "#/definitions/FindThirdPartyIdentitysRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: object
+                properties:
+                  pageNo:
+                    type: integer
+                    format: "int32"
+                    description: 页码
+                  pageSize:
+                    type: integer
+                    format: "int32"
+                    description: 翻页大小
+                  pageCount:
+                    type: integer
+                    format: "int32"
+                    description: 页数
+                  totalCount:
+                    type: integer
+                    format: "int32"
+                    description: 总数量
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/definitions/ThirdPartyIdentity"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/update:
+    put:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "更新第三方认证"
+      description: "更新第三方认证"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "更新第三方认证"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateThirdPartyIdentityRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/ThirdPartyIdentity"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/delete/{id}:
+    delete:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "删除第三方认证"
+      description: "删除第三方认证"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "删除第三方认证"
+          required: true
+          type: "string"
+          format: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/batchDelete:
+    delete:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "批量删除第三方认证"
+      description: "批量删除第三方认证通过ID"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "批量删除第三方认证通过ID"
+          required: true
+          schema:
+            $ref: "#/definitions/BatchDeleteThirdPartyIdentityRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: ""
+                description: "暂时未返回数据"
+        "405":
+          description: "Invalid input"
+  /thirdPartyIdentity/findByUserId:
+    get:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "批量查询第三方认证通过UserId"
+      description: "批量查询第三方认证通过UserId"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "thirdPartyIdentityId"
+          in: "query"
+          type: "string"
+          format: "string"
+          required: true
+          description: "第三方认证ID"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/ThirdPartyIdentity"
+  /thirdPartyIdentity/findByOpenId:
+    get:
+      tags:
+        - "ThirdPartyIdentity"
+      summary: "查询第三方认证通过OpenID"
+      description: "查询第三方认证通过OpenID"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "provider"
+          in: "query"
+          type: "string"
+          format: "string"
+          required: true
+          description: "第三方认证平台"
+        - name: "openId"
+          in: "query"
+          type: "string"
+          format: "string"
+          required: true
+          description: "第三方开放ID"
+        - name: "unionId"
+          in: "query"
+          type: "string"
+          format: "string"
+          required: true
+          description: "第三方关联ID"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int64
+              msg:
+                type: string
+                format: string
+              data:
+                $ref: "#/definitions/ThirdPartyIdentity"
+  
+definitions:
+  CreateUserRequest:
+    type: object
+    properties: 
+      userPoolId:
+        type: string
+        format: string
+        description: 用户池ID
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      email:
+        type: string
+        format: string
+        description: 邮件
+      emailVerified:
+        type: boolean
+        format: boolean
+        description: 邮件是否验证
+      phone:
+        type: string
+        format: string
+        description: 电话
+      phoneVerified:
+        type: boolean
+        format: boolean
+        description: 电话是否验证
+      username:
+        type: string
+        format: string
+        description: 用户名称
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      company:
+        type: string
+        format: string
+        description: 公司名称
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      browser:
+        type: string
+        format: string
+        description: 浏览器（需确认）
+      device:
+        type: string
+        format: string
+        description: 设备（需确认）
+      password:
+        type: string
+        format: string
+        description: 密码
+      registerInClient:
+        type: string
+        format: string
+        description: 注册客户端
+      registerMethod:
+        type: string
+        format: string
+        description: 注册方式
+      loginsCount:
+        type: integer
+        format: int32
+        description: 登录数量
+      lastLogin:
+        type: string
+        format: string
+        description: 最近登录
+      lastIP:
+        type: string
+        format: string
+        description: 最近登录IP
+      signedUp:
+        type: string
+        format: string
+        description: 注册
+      blocked:
+        type: boolean
+        format: boolean
+        description: 是否封号
+      isDeleted:
+        type: boolean
+        format: boolean
+        description: 是否删除
+      name:
+        type: string
+        format: string
+        description: 全名
+      givenName:
+        type: string
+        format: string
+        description: 名
+      familyName:
+        type: string
+        format: string
+        description: 姓
+      middleName:
+        type: string
+        format: string
+        description: 中间名字
+      profile:
+        type: string
+        format: string
+        description: 个人资料
+      preferredUsername:
+        type: string
+        format: string
+        description: 首选用户名
+      website:
+        type: string
+        format: string
+        description: 网站
+      gender:
+        type: integer
+        format: int32
+        description: 性别
+      birthdate:
+        type: integer
+        format: int64
+        description: 出生日期
+      zoneinfo:
+        type: string
+        format: string
+        description: 区域信息
+      locale:
+        type: string
+        format: string
+        description: 地区
+      address:
+        type: string
+        format: string
+        description: 地址
+      formatted:
+        type: string
+        format: string
+        description: 格式化的（需确认）
+      streetAddress:
+        type: string
+        format: string
+        description: 街道地址
+      locality:
+        type: string
+        format: string
+        description: 方向（需确认）
+      region:
+        type: string
+        format: string
+        description: 地域（需确认）
+      postalCode:
+        type: string
+        format: string
+        description: 邮政编码
+      country:
+        type: string
+        format: string
+        description: 国家
+      updatedAt:
+        type: integer
+        format: int64
+        description: 更新时间
+      metadata:
+        type: string
+        format: string
+        description: 扩展字段
+      customData:
+        type: string
+        format: string
+        description: 用户自定义字段
+
+  UpdateUserRequest:
+    type: object
+    properties: 
+      id:
+        type: string
+        format: string
+        description: 用户ID
+      email:
+        type: string
+        format: string
+        description: 邮件
+      emailVerified:
+        type: boolean
+        format: boolean
+        description: 邮件是否验证
+      phone:
+        type: string
+        format: string
+        description: 电话
+      phoneVerified:
+        type: boolean
+        format: boolean
+        description: 电话是否验证
+      username:
+        type: string
+        format: string
+        description: 用户名称
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      company:
+        type: string
+        format: string
+        description: 公司名称
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      browser:
+        type: string
+        format: string
+        description: 浏览器（需确认）
+      device:
+        type: string
+        format: string
+        description: 设备（需确认）
+      password:
+        type: string
+        format: string
+        description: 密码
+      registerInClient:
+        type: string
+        format: string
+        description: 注册客户端
+      registerMethod:
+        type: string
+        format: string
+        description: 注册方式
+      loginsCount:
+        type: integer
+        format: int32
+        description: 登录数量
+      lastLogin:
+        type: string
+        format: string
+        description: 最近登录
+      lastIP:
+        type: string
+        format: string
+        description: 最近登录IP
+      signedUp:
+        type: string
+        format: string
+        description: 注册
+      blocked:
+        type: boolean
+        format: boolean
+        description: 是否封号
+      isDeleted:
+        type: boolean
+        format: boolean
+        description: 是否删除
+      name:
+        type: string
+        format: string
+        description: 全名
+      givenName:
+        type: string
+        format: string
+        description: 名
+      familyName:
+        type: string
+        format: string
+        description: 姓
+      middleName:
+        type: string
+        format: string
+        description: 中间名字
+      profile:
+        type: string
+        format: string
+        description: 个人资料
+      preferredUsername:
+        type: string
+        format: string
+        description: 首选用户名
+      website:
+        type: string
+        format: string
+        description: 网站
+      gender:
+        type: integer
+        format: int32
+        description: 性别
+      birthdate:
+        type: integer
+        format: int64
+        description: 出生日期
+      zoneinfo:
+        type: string
+        format: string
+        description: 区域信息
+      locale:
+        type: string
+        format: string
+        description: 地区
+      address:
+        type: string
+        format: string
+        description: 地址
+      formatted:
+        type: string
+        format: string
+        description: 格式化的（需确认）
+      streetAddress:
+        type: string
+        format: string
+        description: 街道地址
+      locality:
+        type: string
+        format: string
+        description: 方向（需确认）
+      region:
+        type: string
+        format: string
+        description: 地域（需确认）
+      postalCode:
+        type: string
+        format: string
+        description: 邮政编码
+      country:
+        type: string
+        format: string
+        description: 国家
+      updatedAt:
+        type: integer
+        format: int64
+        description: 更新时间
+      metadata:
+        type: string
+        format: string
+        description: 扩展字段
+      customData:
+        type: string
+        format: string
+        description: 用户自定义字段
+
+  FindUsersRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+  BatchDeleteUserRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+
+  User:
+    type: object
+    properties: 
+      id:
+        type: string
+        format: string
+        description: 用户ID
+      userPoolId:
+        type: string
+        format: string
+        description: 用户池ID
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      email:
+        type: string
+        format: string
+        description: 邮件
+      emailVerified:
+        type: boolean
+        format: boolean
+        description: 邮件是否验证
+      phone:
+        type: string
+        format: string
+        description: 电话
+      phoneVerified:
+        type: boolean
+        format: boolean
+        description: 电话是否验证
+      username:
+        type: string
+        format: string
+        description: 用户名称
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      company:
+        type: string
+        format: string
+        description: 公司名称
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      browser:
+        type: string
+        format: string
+        description: 浏览器（需确认）
+      device:
+        type: string
+        format: string
+        description: 设备（需确认）
+      password:
+        type: string
+        format: string
+        description: 密码
+      registerInClient:
+        type: string
+        format: string
+        description: 注册客户端
+      registerMethod:
+        type: string
+        format: string
+        description: 注册方式
+      loginsCount:
+        type: integer
+        format: int32
+        description: 登录数量
+      lastLogin:
+        type: string
+        format: string
+        description: 最近登录
+      lastIP:
+        type: string
+        format: string
+        description: 最近登录IP
+      signedUp:
+        type: string
+        format: string
+        description: 注册
+      blocked:
+        type: boolean
+        format: boolean
+        description: 是否封号
+      isDeleted:
+        type: boolean
+        format: boolean
+        description: 是否删除
+      name:
+        type: string
+        format: string
+        description: 全名
+      givenName:
+        type: string
+        format: string
+        description: 名
+      familyName:
+        type: string
+        format: string
+        description: 姓
+      middleName:
+        type: string
+        format: string
+        description: 中间名字
+      profile:
+        type: string
+        format: string
+        description: 个人资料
+      preferredUsername:
+        type: string
+        format: string
+        description: 首选用户名
+      website:
+        type: string
+        format: string
+        description: 网站
+      gender:
+        type: integer
+        format: int32
+        description: 性别
+      birthdate:
+        type: integer
+        format: int64
+        description: 出生日期
+      zoneinfo:
+        type: string
+        format: string
+        description: 区域信息
+      locale:
+        type: string
+        format: string
+        description: 地区
+      address:
+        type: string
+        format: string
+        description: 地址
+      formatted:
+        type: string
+        format: string
+        description: 格式化的（需确认）
+      streetAddress:
+        type: string
+        format: string
+        description: 街道地址
+      locality:
+        type: string
+        format: string
+        description: 方向（需确认）
+      region:
+        type: string
+        format: string
+        description: 地域（需确认）
+      postalCode:
+        type: string
+        format: string
+        description: 邮政编码
+      country:
+        type: string
+        format: string
+        description: 国家
+      updatedAt:
+        type: integer
+        format: int64
+        description: 更新时间
+      metadata:
+        type: string
+        format: string
+        description: 扩展字段
+      customData:
+        type: string
+        format: string
+        description: 用户自定义字段
+
+  CreateUserPoolRequest:
+    type: object
+    properties: 
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      name:
+        type: string
+        format: string
+        description: 用户池名称
+      domain:
+        type: string
+        format: string
+        description: 网址
+      description:
+        type: string
+        format: string
+        description: 描述
+      secret:
+        type: string
+        format: string
+        description: 密钥
+      JwtSecret:
+        type: string
+        format: string
+        description: JWT密钥
+      logo:
+        type: string
+        format: string
+        description: Logo
+      isDeleted:
+        type: boolean
+        format: boolean
+        description: 是否删除
+  UpdateUserPoolRequest:
+    type: object
+    properties: 
+      id:
+        type: string
+        format: string
+        description: 用户池ID
+      name:
+        type: string
+        format: string
+        description: 用户池名称
+      domain:
+        type: string
+        format: string
+        description: 网址
+      description:
+        type: string
+        format: string
+        description: 描述
+      secret:
+        type: string
+        format: string
+        description: 密钥
+      JwtSecret:
+        type: string
+        format: string
+        description: JWT密钥
+      logo:
+        type: string
+        format: string
+        description: Logo
+
+  FindUserPoolsRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户池ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+  BatchDeleteUserPoolRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户池ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+
+  UserPool:
+    type: object
+    properties:
+      id:
+        type: string
+        format: string
+        description: 用户池ID
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      name:
+        type: string
+        format: string
+        description: 用户池名称
+      domain:
+        type: string
+        format: string
+        description: 网址
+      description:
+        type: string
+        format: string
+        description: 描述
+      secret:
+        type: string
+        format: string
+        description: 密钥
+      JwtSecret:
+        type: string
+        format: string
+        description: JWT密钥
+      logo:
+        type: string
+        format: string
+        description: Logo
+      isDeleted:
+        type: boolean
+        format: boolean
+        description: 是否删除
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+      mtime:
+        type: integer
+        format: int64
+        description: 更新时间
+
+  CreateThirdPartyIdentityRequest:
+    type: object
+    properties: 
+      userId:
+        type: string
+        format: string
+        description: 用户ID
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      openId:
+        type: string
+        format: string
+        description: 开放ID
+      unionId:
+        type: string
+        format: string
+        description: 关联ID
+      provider:
+        type: string
+        format: string
+        description: 第三方平台
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      phone:
+        type: string
+        format: string
+        description: 电话
+      refreshToken:
+        type: string
+        format: string
+        description: 刷新Token
+      accessToken:
+        type: string
+        format: string
+        description: 权限Token
+      expiresIn:
+        type: integer
+        format: int64
+        description: 过期时间
+      snapshot:
+        type: string
+        format: string
+        description: 快照
+
+  UpdateThirdPartyIdentityRequest:
+    type: object
+    properties: 
+      id:
+        type: string
+        format: string
+        description: 第三方认证ID
+      openId:
+        type: string
+        format: string
+        description: 开放ID
+      unionId:
+        type: string
+        format: string
+        description: 关联ID
+      provider:
+        type: string
+        format: string
+        description: 第三方平台
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      phone:
+        type: string
+        format: string
+        description: 电话
+      refreshToken:
+        type: string
+        format: string
+        description: 刷新Token
+      accessToken:
+        type: string
+        format: string
+        description: 权限Token
+      expiresIn:
+        type: integer
+        format: int64
+        description: 过期时间
+      snapshot:
+        type: string
+        format: string
+        description: 快照
+
+  FindOneThirdPartyIdentityByOpenIdRequest:
+    type: object
+    properties: 
+      openId:
+        type: string
+        format: string
+        description: 开放ID
+      unionId:
+        type: string
+        format: string
+        description: 关联ID
+      provider:
+        type: string
+        format: string
+        description: 第三方平台
+  
+  FindThirdPartyIdentitysRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+  BatchDeleteThirdPartyIdentityRequest:
+    type: object
+    properties: 
+      ids:
+        description: 用户ID列表
+        type: array
+        items: 
+          type: string
+          format: string
+
+
+  ThirdPartyIdentity:
+    type: object
+    properties:
+      id:
+        type: string
+        format: string
+        description: 第三方认证ID
+      userId:
+        type: string
+        format: string
+        description: 用户ID
+      tenantId:
+        type: string
+        format: string
+        description: 租户ID
+      openId:
+        type: string
+        format: string
+        description: 开放ID
+      unionId:
+        type: string
+        format: string
+        description: 关联ID
+      provider:
+        type: string
+        format: string
+        description: 第三方平台
+      photo:
+        type: string
+        format: string
+        description: 头像图片
+      nickname:
+        type: string
+        format: string
+        description: 昵称
+      phone:
+        type: string
+        format: string
+        description: 电话
+      refreshToken:
+        type: string
+        format: string
+        description: 刷新Token
+      accessToken:
+        type: string
+        format: string
+        description: 权限Token
+      expiresIn:
+        type: integer
+        format: int64
+        description: 过期时间
+      snapshot:
+        type: string
+        format: string
+        description: 快照
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+      mtime:
+        type: integer
+        format: int64
+        description: 更新时间
+    
+  PageRequest:
+    type: object
+    properties: 
+      filters: 
+        type: object
+      pageNo: 
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      sort:
+        type: array
+        items: 
+          $ref: "#/definitions/SortSpec"
+
+  SortSpec:
+    type: object
+    properties: 
+      property:
+        type: string
+        format: string
+      type:
+        type: string
+        format: string
+      ignoreCase:
+        type: string
+        format: string 

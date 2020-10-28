@@ -1,0 +1,4855 @@
+swagger: '2.0'
+info:
+  description: product-srv
+  version: 1.0-SNAPSHOT
+  title: product-srv
+  contact:
+    name: Luckyfish
+    url: 'http://www.lf.com'
+    email: developer@luckyfish.com
+host: '127.0.0.1:10215'
+basePath: /
+tags:
+  - name: brand-rest
+    description: 品牌服务
+  - name: category-rest
+    description: 商品分类服务
+  - name: customer-view-service-client
+    description: Customer View Service Client
+  - name: inventory-rest
+    description: 库存服务
+  - name: product-rest
+    description: 商品服务
+  - name: product-view-service-client
+    description: Product View Service Client
+  - name: prop-rest
+    description: 属性服务
+  - name: prop-val-rest
+    description: 属性值服务
+  - name: sku-rest
+    description: Sku服务
+paths:
+  /brand:
+    post:
+      tags:
+        - brand-rest
+      summary: 创建品牌
+      operationId: create
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateBrandDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«BrandDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - brand-rest
+      summary: 更新品牌
+      operationId: update
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateBrandDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«BrandDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /brand/addProducts:
+    post:
+      tags:
+        - brand-rest
+      summary: 批量添加关联商品
+      operationId: addProducts
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchAddBrandProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /brand/batchRetrieve:
+    post:
+      tags:
+        - brand-rest
+      summary: 批量查询品牌，如果指定了店铺ID会包含扩展属性
+      operationId: batchRetrieve
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«BrandDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /brand/createMapping:
+    post:
+      tags:
+        - brand-rest
+      summary: 创建品牌店铺映射
+      operationId: createMapping
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateBrandMappingDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /brand/deleteMapping:
+    delete:
+      tags:
+        - brand-rest
+      summary: 删除品牌店铺映射
+      operationId: deleteMapping
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /brand/page:
+    post:
+      tags:
+        - brand-rest
+      summary: 品牌翻页查询
+      operationId: page
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«BrandDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /brand/removeProducts:
+    post:
+      tags:
+        - brand-rest
+      summary: 批量删除关联商品
+      operationId: removeProducts
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchDeleteBrandProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/brand/{id}':
+    get:
+      tags:
+        - brand-rest
+      summary: 查询品牌，如果指定了店铺ID会包含扩展属性
+      operationId: retrieve
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«BrandDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - brand-rest
+      summary: 删除分类
+      operationId: delete
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /category:
+    post:
+      tags:
+        - category-rest
+      summary: 创建分类
+      operationId: create_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - category-rest
+      summary: 更新分类
+      operationId: update_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/addProducts:
+    post:
+      tags:
+        - category-rest
+      summary: 批量添加关联商品
+      operationId: addProducts_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchAddCategoryProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/batchRetrieve:
+    post:
+      tags:
+        - category-rest
+      summary: 批量查询分类，如果指定了店铺ID会包含扩展属性
+      operationId: batchRetrieve_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«CategoryDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/createMapping:
+    post:
+      tags:
+        - category-rest
+      summary: 创建分类店铺映射
+      operationId: createMapping_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategoryMappingDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/deleteMapping:
+    delete:
+      tags:
+        - category-rest
+      summary: 删除分类店铺映射
+      operationId: deleteMapping_1
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /category/expand:
+    get:
+      tags:
+        - category-rest
+      summary: 展开分类树结构
+      operationId: expand
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: query
+          description: type
+          required: true
+          type: string
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Map«string,CategoryExpandDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/page:
+    post:
+      tags:
+        - category-rest
+      summary: 分类翻页查询
+      operationId: page_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CategoryDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/pageProduct:
+    post:
+      tags:
+        - category-rest
+      summary: 翻页查询分类商品
+      operationId: pageProduct
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«long»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/removeProducts:
+    post:
+      tags:
+        - category-rest
+      summary: 批量删除关联商品
+      operationId: removeProducts_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchDeleteCategoryProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/category/{id}':
+    get:
+      tags:
+        - category-rest
+      summary: 查询分类，如果指定了店铺ID会包含扩展属性
+      operationId: retrieve_1
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - category-rest
+      summary: 删除分类
+      operationId: delete_1
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /customerView/page:
+    post:
+      tags:
+        - customer-view-service-client
+      summary: page
+      operationId: pageUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CustomerViewDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/apply:
+    post:
+      tags:
+        - inventory-rest
+      summary: 使冻结库存生效
+      operationId: applyUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDto
+          description: updateInventoryDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/batchApply:
+    post:
+      tags:
+        - inventory-rest
+      summary: 批量使冻结库存生效
+      operationId: batchApplyUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDtos
+          description: updateInventoryDtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/batchFreeze:
+    post:
+      tags:
+        - inventory-rest
+      summary: 批量冻结库存
+      operationId: batchFreezeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDtos
+          description: updateInventoryDtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/batchIncrease:
+    post:
+      tags:
+        - inventory-rest
+      summary: 批量增加库存
+      operationId: batchIncreaseUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDtos
+          description: updateInventoryDtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/batchRetrieve:
+    post:
+      tags:
+        - inventory-rest
+      summary: 批量获取库存
+      operationId: batchRetrieveUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: skuIds
+          description: skuIds
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Map«long,InventoryDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/batchUnfreeze:
+    post:
+      tags:
+        - inventory-rest
+      summary: 批量解冻库存
+      operationId: batchUnfreezeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDtos
+          description: updateInventoryDtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/freeze:
+    post:
+      tags:
+        - inventory-rest
+      summary: 冻结库存
+      operationId: freezeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDto
+          description: updateInventoryDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/increase:
+    post:
+      tags:
+        - inventory-rest
+      summary: 增加库存
+      operationId: increaseUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDto
+          description: updateInventoryDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/unfreeze:
+    post:
+      tags:
+        - inventory-rest
+      summary: 解冻库存
+      operationId: unfreezeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateInventoryDto
+          description: updateInventoryDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /inventory/updateSkuInventory:
+    post:
+      tags:
+        - inventory-rest
+      summary: 更新sku库存
+      operationId: updateSkuInventoryUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateInventoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/inventory/{skuId}':
+    get:
+      tags:
+        - inventory-rest
+      summary: 获取库存
+      operationId: retrieveUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: skuId
+          in: path
+          description: skuId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«InventoryDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product:
+    post:
+      tags:
+        - product-rest
+      summary: 创建商品
+      operationId: create_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ProductDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - product-rest
+      summary: 更新商品
+      operationId: update_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateProductDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ProductDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product/batchDelete:
+    post:
+      tags:
+        - product-rest
+      summary: 批量删除商品
+      operationId: batchDelete
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product/batchRetrieve:
+    post:
+      tags:
+        - product-rest
+      summary: 批量查询商品，如果指定了店铺ID会包含扩展属性
+      operationId: batchRetrieve_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ProductDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product/createMapping:
+    post:
+      tags:
+        - product-rest
+      summary: 创建商品店铺映射
+      operationId: createMapping_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateProductMappingDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product/deleteMapping:
+    delete:
+      tags:
+        - product-rest
+      summary: 删除商品店铺映射
+      operationId: deleteMapping_2
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /product/page:
+    post:
+      tags:
+        - product-rest
+      summary: 商品翻页查询
+      operationId: page_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«ProductDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /product/pageMapping:
+    post:
+      tags:
+        - product-rest
+      summary: 商品翻页查询
+      operationId: page_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«ProductMappingDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/product/{id}':
+    get:
+      tags:
+        - product-rest
+      summary: 查询商品，如果指定了店铺ID会包含扩展属性
+      operationId: retrieve_2
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ProductDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - product-rest
+      summary: 删除商品
+      operationId: delete_2
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /productView/onProductMappingCreated:
+    post:
+      tags:
+        - product-view-service-client
+      summary: onProductMappingCreated
+      operationId: onProductMappingCreatedUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/OnProductMappingCreateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /productView/onProductMappingUpdated:
+    post:
+      tags:
+        - product-view-service-client
+      summary: onProductMappingUpdated
+      operationId: onProductMappingUpdatedUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/OnProductMappingUpdateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /productView/page:
+    post:
+      tags:
+        - product-view-service-client
+      summary: page
+      operationId: pageUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«CustomerViewDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prop:
+    post:
+      tags:
+        - prop-rest
+      summary: 创建属性
+      operationId: create_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePropDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«PropDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prop/batchCreate:
+    post:
+      tags:
+        - prop-rest
+      summary: 批量创建属性
+      operationId: batchCreate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dtoList
+          description: dtoList
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CreatePropDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«PropDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prop/batchRetrieve:
+    post:
+      tags:
+        - prop-rest
+      summary: 批量查询属性
+      operationId: batchRetrieve_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«PropDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prop/page:
+    post:
+      tags:
+        - prop-rest
+      summary: 属性翻页查询
+      operationId: page_4
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«PropDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prop/{id}':
+    get:
+      tags:
+        - prop-rest
+      summary: 查询属性
+      operationId: retrieve_3
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«PropDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /propVal:
+    post:
+      tags:
+        - prop-val-rest
+      summary: 创建属性值
+      operationId: create_4
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePropValDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«PropValDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /propVal/batchCreate:
+    post:
+      tags:
+        - prop-val-rest
+      summary: 批量创建属性值
+      operationId: batchCreate_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/BatchCreatePropValDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«PropValDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /propVal/batchRetrieve:
+    post:
+      tags:
+        - prop-val-rest
+      summary: 批量查询属性值
+      operationId: batchRetrieve_4
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«PropValDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /propVal/page:
+    post:
+      tags:
+        - prop-val-rest
+      summary: 属性值翻页查询
+      operationId: page_5
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«PropValDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/propVal/{id}':
+    get:
+      tags:
+        - prop-val-rest
+      summary: 查询属性值
+      operationId: retrieve_4
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«PropValDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /sku:
+    put:
+      tags:
+        - sku-rest
+      summary: 更新Sku
+      operationId: update_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateSkuDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«SkuDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /sku/batchRetrieve:
+    post:
+      tags:
+        - sku-rest
+      summary: 批量查询Sku，如果指定了店铺ID会包含扩展属性
+      operationId: batchRetrieve_5
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«SkuDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /sku/page:
+    post:
+      tags:
+        - sku-rest
+      summary: sku翻页查询，如果指定了店铺ID会包含扩展属性
+      operationId: page_6
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«SkuDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/sku/{id}':
+    get:
+      tags:
+        - sku-rest
+      summary: 查询Sku，如果指定了店铺ID会包含扩展属性
+      operationId: retrieve_5
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«SkuDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  BatchAddBrandProductDto:
+    type: object
+    required:
+      - brandId
+      - productIds
+    properties:
+      brandId:
+        type: integer
+        format: int64
+        description: 品牌ID
+        # allowEmptyValue: false
+      productIds:
+        type: array
+        description: 商品ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，店铺品牌必须，租户或平台品牌为空
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，租户或店铺品牌必须，平台品牌为空
+        # allowEmptyValue: false
+    title: BatchAddBrandProductDto
+  BatchAddCategoryProductDto:
+    type: object
+    required:
+      - categoryId
+      - productIds
+    properties:
+      categoryId:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      productIds:
+        type: array
+        description: 商品ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，店铺品牌必须，租户或平台品牌为空
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，租户或店铺品牌必须，平台品牌为空
+        # allowEmptyValue: false
+    title: BatchAddCategoryProductDto
+  BatchCreatePropValDto:
+    type: object
+    required:
+      - names
+      - pid
+    properties:
+      names:
+        type: array
+        description: 属性值名称列表
+        # allowEmptyValue: false
+        items:
+          type: string
+      pid:
+        type: integer
+        format: int64
+        description: 属性项ID
+        # allowEmptyValue: false
+    title: BatchCreatePropValDto
+  BatchDeleteBrandProductDto:
+    type: object
+    required:
+      - brandId
+      - productIds
+    properties:
+      brandId:
+        type: integer
+        format: int64
+        description: 品牌ID
+        # allowEmptyValue: false
+      productIds:
+        type: array
+        description: 商品ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，店铺品牌必须，租户或平台品牌为空
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，租户或店铺品牌必须，平台品牌为空
+        # allowEmptyValue: false
+    title: BatchDeleteBrandProductDto
+  BatchDeleteCategoryProductDto:
+    type: object
+    required:
+      - categoryId
+      - productIds
+    properties:
+      categoryId:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      productIds:
+        type: array
+        description: 商品ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，店铺品牌必须，租户或平台品牌为空
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，租户或店铺品牌必须，平台品牌为空
+        # allowEmptyValue: false
+    title: BatchDeleteCategoryProductDto
+  BrandDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - name
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 品牌ID
+        # allowEmptyValue: false
+      introduction:
+        type: string
+        description: 介绍
+        # allowEmptyValue: false
+      keywords:
+        type: array
+        description: 关键字
+        # allowEmptyValue: false
+        items:
+          type: string
+      logoLarge:
+        description: 商标大图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      logoMedium:
+        description: 商标中图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      logoOrigin:
+        description: 商标原图/高清图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      logoThumb:
+        description: 商标缩略图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      url:
+        type: string
+        description: 网站链接
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+    title: BrandDto
+    description: 品牌
+  CategoryDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - name
+      - type
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性
+        # allowEmptyValue: false
+      icon:
+        description: 分类图标
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      id:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 分类名
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 上级分类ID
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 类目属性
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryPropDto'
+      sort:
+        type: integer
+        format: int32
+        description: 分类排序，越小越靠前
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: 用户自定义分类类型，不同的类型形成不同的分类树
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+    title: CategoryDto
+  CategoryExpandDto:
+    type: object
+    required:
+      - id
+      - isLeaf
+      - isParent
+      - isRoot
+      - name
+      - type
+    properties:
+      children:
+        type: array
+        description: 下级分类ID列表
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      icon:
+        description: 分类图标
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      id:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      isLeaf:
+        type: boolean
+        example: false
+        description: 是否叶子节点
+        # allowEmptyValue: false
+      isParent:
+        type: boolean
+        example: false
+        description: 是否父节点
+        # allowEmptyValue: false
+      isRoot:
+        type: boolean
+        example: false
+        description: 是否根节点
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 分类名
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 上级分类ID
+        # allowEmptyValue: false
+      path:
+        type: array
+        description: 祖先路径
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      sort:
+        type: integer
+        format: int32
+        description: 分类排序，越小越靠前
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: 用户自定义分类类型，不同的类型形成不同的分类树
+        # allowEmptyValue: false
+    title: CategoryExpandDto
+    description: 分类树节点
+  CategoryPropDto:
+    type: object
+    required:
+      - customizable
+      - enumerable
+      - multiple
+      - name
+      - pid
+      - required
+    properties:
+      customizable:
+        type: boolean
+        example: false
+        description: 如果是枚举，是否允许用户自定义枚举值
+        # allowEmptyValue: false
+      enumValues:
+        type: array
+        description: 枚举值
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryPropValDto'
+      enumerable:
+        type: boolean
+        example: false
+        description: 是否枚举
+        # allowEmptyValue: false
+      multiple:
+        type: boolean
+        example: false
+        description: 是否多值
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 属性项名称
+        # allowEmptyValue: false
+      pid:
+        type: integer
+        format: int64
+        description: 属性项
+        # allowEmptyValue: false
+      required:
+        type: boolean
+        example: false
+        description: 是否必填
+        # allowEmptyValue: false
+    title: CategoryPropDto
+    description: 分类属性
+  CategoryPropValDto:
+    type: object
+    required:
+      - name
+      - vid
+    properties:
+      name:
+        type: string
+        description: 属性项值称
+        # allowEmptyValue: false
+      vid:
+        type: integer
+        format: int64
+        description: 属性值ID
+        # allowEmptyValue: false
+    title: CategoryPropValDto
+    description: 分类属性值
+  CreateBrandDto:
+    type: object
+    required:
+      - name
+    properties:
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 私有品牌的扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 私有品牌的扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      introduction:
+        type: string
+        description: 介绍
+        # allowEmptyValue: false
+      keywords:
+        type: array
+        description: 关键字
+        # allowEmptyValue: false
+        items:
+          type: string
+      logo:
+        type: string
+        description: 商标图片链接
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      url:
+        type: string
+        description: 网站链接
+        # allowEmptyValue: false
+    title: CreateBrandDto
+    description: 创建品牌
+  CreateBrandMappingDto:
+    type: object
+    properties:
+      brandId:
+        type: integer
+        format: int64
+        description: 品牌ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 私有品牌的扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 私有品牌的扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+    title: CreateBrandMappingDto
+  CreateCategoryDto:
+    type: object
+    required:
+      - name
+      - type
+    properties:
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      icon:
+        type: string
+        description: 分类图标url
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 分类名
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 上级分类ID，需要已经存在
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 分类属性
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryPropDto'
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+      sort:
+        type: integer
+        format: int32
+        description: 分类排序，越小越靠前
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: 用户自定义分类类型，不同的类型形成不同的分类树
+        # allowEmptyValue: false
+    title: CreateCategoryDto
+    description: 创建分类
+  CreateCategoryMappingDto:
+    type: object
+    properties:
+      categoryId:
+        type: integer
+        format: int64
+        description: 分类ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 私有分类的扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 私有分类的扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+    title: CreateCategoryMappingDto
+  CreateProductDto:
+    type: object
+    required:
+      - costPrice
+      - inventoryPolicy
+      - marketPrice
+      - name
+      - price
+      - purchasePrice
+      - shopId
+      - skus
+      - tenantId
+      - type
+    properties:
+      avatar:
+        type: string
+        description: 主图url
+        # allowEmptyValue: false
+      brandIds:
+        type: array
+        description: 商品的品牌
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      categoryIds:
+        type: array
+        description: 商品关联的分类树叶子ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      code:
+        type: string
+        description: 商品编码/货号
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 商家自定义编码
+        # allowEmptyValue: false
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性
+        # allowEmptyValue: false
+      htmlDescription:
+        type: string
+        description: html详情
+        # allowEmptyValue: false
+      imageDescription:
+        type: array
+        description: 图片详情，一组图片url
+        # allowEmptyValue: false
+        items:
+          type: string
+      images:
+        type: array
+        description: 相册图片
+        # allowEmptyValue: false
+        items:
+          type: string
+      inventoryPolicy:
+        type: integer
+        format: int32
+        description: 库存策略（1 = 拍下减库存，2 = 付款减库存）
+        # allowEmptyValue: false
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      preSaleTime:
+        type: integer
+        format: int64
+        description: 预售时间
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 商品的属性值
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateProductPropDto'
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      skus:
+        type: array
+        description: SKU信息
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateSkuDto'
+      sort:
+        type: integer
+        format: int32
+        description: '排序,越小越优先'
+        # allowEmptyValue: false
+      specs:
+        type: array
+        description: 商品规格信息，单规格商品为空
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateProductPropDto'
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID
+        # allowEmptyValue: false
+      textDescription:
+        type: array
+        description: 多行文本详情
+        # allowEmptyValue: false
+        items:
+          type: string
+      title:
+        type: string
+        description: 标题
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 商品类型（1 = 普通商品，2 = 赠品，3 = 虚拟商品）
+        # allowEmptyValue: false
+      unit:
+        type: string
+        description: 计量单位
+        # allowEmptyValue: false
+      usp:
+        type: string
+        description: 卖点/推荐
+        # allowEmptyValue: false
+    title: CreateProductDto
+    description: 创建商品
+  CreateProductMappingDto:
+    type: object
+    properties:
+      extendFields:
+        type: array
+        description: 私有商品的扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 私有商品的扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID，创建公共商品时为空，创建私有商品时必须
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，创建公共商品时为空，创建私有商品时必须
+        # allowEmptyValue: false
+      skuMappings:
+        type: array
+        description: 私有商品管来呢sku的扩展属性
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateSkuMappingDto'
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共商品时为空，创建私有商品时必须
+        # allowEmptyValue: false
+    title: CreateProductMappingDto
+  CreateProductPropDto:
+    type: object
+    required:
+      - pid
+      - pname
+      - propVals
+    properties:
+      pid:
+        type: integer
+        format: int64
+        description: 属性项ID
+        # allowEmptyValue: false
+      pname:
+        type: string
+        description: 属性项名称
+        # allowEmptyValue: false
+      propVals:
+        type: array
+        description: 属性值列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreatePropSpecValDto'
+    title: CreateProductPropDto
+    description: 商品属性信息
+  CreatePropDto:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      parentPid:
+        type: integer
+        format: int64
+        description: 上级属性项ID
+        # allowEmptyValue: false
+      parentVid:
+        type: integer
+        format: int64
+        description: 上级属性值ID
+        # allowEmptyValue: false
+    title: CreatePropDto
+    description: 创建属性项
+  CreatePropSpecValDto:
+    type: object
+    required:
+      - propValId
+      - propValName
+    properties:
+      image:
+        type: string
+        description: 规格值图片
+        # allowEmptyValue: false
+      propValId:
+        type: integer
+        format: int64
+        description: 规格值ID
+        # allowEmptyValue: false
+      propValName:
+        type: string
+        description: 规格值名称
+        # allowEmptyValue: false
+    title: CreatePropSpecValDto
+    description: 商品的规格值
+  CreatePropValDto:
+    type: object
+    required:
+      - name
+      - pid
+    properties:
+      name:
+        type: string
+        description: 属性值名称
+        # allowEmptyValue: false
+      pid:
+        type: integer
+        format: int64
+        description: 属性项ID
+        # allowEmptyValue: false
+    title: CreatePropValDto
+    description: 创建属性值
+  CreateSkuDto:
+    type: object
+    required:
+      - costPrice
+      - frozen
+      - marketPrice
+      - onSale
+      - price
+      - purchasePrice
+      - quantity
+    properties:
+      code:
+        type: string
+        description: 规格编码/条形码
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 用户自定义规格编码
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      frozen:
+        type: integer
+        format: int32
+        description: 冻结量
+        # allowEmptyValue: false
+      image:
+        type: string
+        description: 规格图片
+        # allowEmptyValue: false
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      quantity:
+        type: integer
+        format: int32
+        description: 库存量
+        # allowEmptyValue: false
+      specs:
+        type: array
+        description: 规格信息，单规格商品为空
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuSpecDto'
+    title: CreateSkuDto
+    description: 创建Sku
+  CreateSkuMappingDto:
+    type: object
+    properties:
+      extendFields:
+        type: array
+        description: 私有SKU的扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 私有SKU的扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      skuId:
+        type: integer
+        format: int64
+        description: SKUID，创建公共SKU时为空，创建私有SKU时必须
+        # allowEmptyValue: false
+    title: CreateSkuMappingDto
+  CustomerViewDto:
+    type: object
+    required:
+      - birthday
+      - city
+      - countryCode
+      - ctime
+      - district
+      - id
+      - job
+      - lastActiveTime
+      - lastOrderTime
+      - mobile
+      - nickname
+      - orderCount
+      - orderTotalAmount
+      - province
+      - relatedOwnerId
+      - relatedOwnerNickName
+      - relatedOwnerRealName
+      - shopId
+      - source
+      - sourceRelatedId
+      - sourceRelatedName
+      - tags
+      - tenantId
+      - utime
+      - wechat
+    properties:
+      birthday:
+        type: integer
+        format: int64
+        description: 生日
+        # allowEmptyValue: false
+      city:
+        type: string
+        description: 城市
+        # allowEmptyValue: false
+      countryCode:
+        type: string
+        description: 国家
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      district:
+        type: string
+        description: 地区
+        # allowEmptyValue: false
+      gender:
+        type: integer
+        format: int32
+        description: 性别。0：未知，1：男，2：女
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: customer id
+        # allowEmptyValue: false
+      job:
+        type: string
+        description: 职业
+        # allowEmptyValue: false
+      lastActiveTime:
+        type: integer
+        format: int64
+        description: 最近活跃时
+        # allowEmptyValue: false
+      lastOrderTime:
+        type: integer
+        format: int64
+        description: 最近一次购买时间
+        # allowEmptyValue: false
+      mobile:
+        type: string
+        description: 手机号
+        # allowEmptyValue: false
+      nickname:
+        type: string
+        description: 昵称
+        # allowEmptyValue: false
+      orderCount:
+        type: integer
+        format: int64
+        description: 订单成交数
+        # allowEmptyValue: false
+      orderTotalAmount:
+        type: integer
+        format: int64
+        description: 订单成交总金额
+        # allowEmptyValue: false
+      province:
+        type: string
+        description: 省份
+        # allowEmptyValue: false
+      realname:
+        type: string
+        description: 真实姓名/如果有的话
+        # allowEmptyValue: false
+      relatedOwnerId:
+        type: string
+        description: 平台上的 店铺、群、房间 所属人在平台上的id
+        # allowEmptyValue: false
+      relatedOwnerNickName:
+        type: string
+        description: 平台上的 店铺、群、房间 所属人在平台上的 昵称
+        # allowEmptyValue: false
+      relatedOwnerRealName:
+        type: string
+        description: 平台上的 店铺、群、房间 所属人在平台上的 姓名
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 商铺id
+        # allowEmptyValue: false
+      source:
+        type: string
+        description: 所属平台
+        # allowEmptyValue: false
+      sourceRelatedId:
+        type: string
+        description: 平台上的 店铺、群、房间 id
+        # allowEmptyValue: false
+      sourceRelatedName:
+        type: string
+        description: 平台上的 店铺、群、房间 id
+        # allowEmptyValue: false
+      tags:
+        type: array
+        description: 所属标签
+        # allowEmptyValue: false
+        items:
+          type: string
+      tenantId:
+        type: integer
+        format: int64
+        description: 商户
+        # allowEmptyValue: false
+      userId:
+        type: integer
+        format: int64
+        description: 用户id
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 最后更新时间
+        # allowEmptyValue: false
+      wechat:
+        type: string
+        description: 微信号
+        # allowEmptyValue: false
+    title: CustomerViewDto
+  DataResponse«BrandDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/BrandDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«BrandDto»
+    description: 返回数据
+  DataResponse«CategoryDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CategoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«CategoryDto»
+    description: 返回数据
+  DataResponse«InventoryDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/InventoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«InventoryDto»
+    description: 返回数据
+  DataResponse«List«BrandDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/BrandDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«BrandDto»»
+    description: 返回数据
+  DataResponse«List«CategoryDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«CategoryDto»»
+    description: 返回数据
+  DataResponse«List«ProductDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ProductDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«ProductDto»»
+    description: 返回数据
+  DataResponse«List«PropDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/PropDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«PropDto»»
+    description: 返回数据
+  DataResponse«List«PropValDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/PropValDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«PropValDto»»
+    description: 返回数据
+  DataResponse«List«SkuDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«SkuDto»»
+    description: 返回数据
+  DataResponse«List«long»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«long»»
+    description: 返回数据
+  'DataResponse«Map«long,InventoryDto»»':
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: object
+        description: 返回数据
+        # allowEmptyValue: false
+        additionalProperties:
+          $ref: '#/definitions/InventoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: 'DataResponse«Map«long,InventoryDto»»'
+    description: 返回数据
+  'DataResponse«Map«string,CategoryExpandDto»»':
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: object
+        description: 返回数据
+        # allowEmptyValue: false
+        additionalProperties:
+          $ref: '#/definitions/CategoryExpandDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: 'DataResponse«Map«string,CategoryExpandDto»»'
+    description: 返回数据
+  DataResponse«Page«BrandDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«BrandDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«BrandDto»»
+    description: 返回数据
+  DataResponse«Page«CategoryDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«CategoryDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«CategoryDto»»
+    description: 返回数据
+  DataResponse«Page«CustomerViewDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«CustomerViewDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«CustomerViewDto»»
+    description: 返回数据
+  DataResponse«Page«ProductDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«ProductDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«ProductDto»»
+    description: 返回数据
+  DataResponse«Page«ProductMappingDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«ProductMappingDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«ProductMappingDto»»
+    description: 返回数据
+  DataResponse«Page«PropDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«PropDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«PropDto»»
+    description: 返回数据
+  DataResponse«Page«PropValDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«PropValDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«PropValDto»»
+    description: 返回数据
+  DataResponse«Page«SkuDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«SkuDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«SkuDto»»
+    description: 返回数据
+  DataResponse«ProductDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/ProductDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«ProductDto»
+    description: 返回数据
+  DataResponse«PropDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PropDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«PropDto»
+    description: 返回数据
+  DataResponse«PropValDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PropValDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«PropValDto»
+    description: 返回数据
+  DataResponse«SkuDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/SkuDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«SkuDto»
+    description: 返回数据
+  ImageDto:
+    type: object
+    required:
+      - avgColor
+      - height
+      - size
+      - type
+      - uri
+      - urls
+      - width
+    properties:
+      animated:
+        type: boolean
+      avgColor:
+        type: string
+        description: '图片的颜色均值，如#ccc'
+        # allowEmptyValue: false
+      height:
+        type: integer
+        format: int32
+        description: 图片高度（像素）
+        # allowEmptyValue: false
+      size:
+        type: integer
+        format: int32
+        description: 文件大小（字节）
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 图片类型
+        # allowEmptyValue: false
+      uri:
+        type: string
+        description: '图片id，比如 http://oss.www.com/jsoidjfoiffef, uri 就是 jsoidjfoiffef'
+        # allowEmptyValue: false
+      urls:
+        type: array
+        description: 图片链接地址
+        # allowEmptyValue: false
+        items:
+          type: string
+      width:
+        type: integer
+        format: int32
+        description: 图片宽度（像素）
+        # allowEmptyValue: false
+    title: ImageDto
+    description: 图片信息
+  InventoryDto:
+    type: object
+    required:
+      - count
+      - frozen
+      - productId
+      - skuId
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 数量
+        # allowEmptyValue: false
+      frozen:
+        type: integer
+        format: int32
+        description: 冻结数量
+        # allowEmptyValue: false
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      skuId:
+        type: integer
+        format: int64
+        description: Sku ID
+        # allowEmptyValue: false
+    title: InventoryDto
+    description: 库存信息
+  'Map«long,InventoryDto»':
+    type: object
+    title: 'Map«long,InventoryDto»'
+    additionalProperties:
+      $ref: '#/definitions/InventoryDto'
+  'Map«string,CategoryExpandDto»':
+    type: object
+    title: 'Map«string,CategoryExpandDto»'
+    additionalProperties:
+      $ref: '#/definitions/CategoryExpandDto'
+  OnProductMappingCreateDto:
+    type: object
+    properties:
+      mapping:
+        $ref: '#/definitions/ProductMappingDto'
+      product:
+        $ref: '#/definitions/ProductDto'
+    title: OnProductMappingCreateDto
+  OnProductMappingUpdateDto:
+    type: object
+    properties:
+      mapping:
+        $ref: '#/definitions/ProductMappingDto'
+      prevMapping:
+        $ref: '#/definitions/ProductMappingDto'
+      prevProduct:
+        $ref: '#/definitions/ProductDto'
+      product:
+        $ref: '#/definitions/ProductDto'
+    title: OnProductMappingUpdateDto
+  PageExtraDto:
+    type: object
+    required:
+      - pageNo
+      - pageSize
+      - totalCount
+    properties:
+      pageNo:
+        type: integer
+        format: int32
+        description: 当前页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 翻页大小
+        # allowEmptyValue: false
+      totalCount:
+        type: integer
+        format: int64
+        description: 总数
+        # allowEmptyValue: false
+    title: PageExtraDto
+  PageQueryDto:
+    type: object
+    properties:
+      filters:
+        type: object
+        description: 过滤条件
+        # allowEmptyValue: false
+      pageNo:
+        type: integer
+        format: int32
+        description: 页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 页数
+        # allowEmptyValue: false
+      sort:
+        type: array
+        description: 排序
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SortSpecDto'
+    title: PageQueryDto
+  Page«BrandDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/BrandDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«BrandDto»
+  Page«CategoryDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«CategoryDto»
+  Page«CustomerViewDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CustomerViewDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«CustomerViewDto»
+  Page«ProductDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ProductDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«ProductDto»
+  Page«ProductMappingDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ProductMappingDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«ProductMappingDto»
+  Page«PropDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/PropDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«PropDto»
+  Page«PropValDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/PropValDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«PropValDto»
+  Page«SkuDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«SkuDto»
+  ProductDto:
+    type: object
+    required:
+      - costPrice
+      - ctime
+      - frozen
+      - id
+      - marketPrice
+      - name
+      - price
+      - purchasePrice
+      - quantity
+      - type
+    properties:
+      avatar:
+        description: 主图原图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      brandIds:
+        type: array
+        description: 商品关联的品牌
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      categoryIds:
+        type: array
+        description: 商品关联的分类树叶子ID
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      code:
+        type: string
+        description: 商品编码/货号
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 商家自定义编码
+        # allowEmptyValue: false
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性
+        # allowEmptyValue: false
+      frozen:
+        type: integer
+        format: int32
+        description: 总冻结量
+        # allowEmptyValue: false
+      htmlDescription:
+        type: string
+        description: html详情，仅在获取详情时返回
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      imageDescription:
+        type: array
+        description: 图片详情，一组图片url，仅在获取详情时返
+        # allowEmptyValue: false
+        items:
+          type: string
+      images:
+        type: array
+        description: 相册图片，仅在获取详情时返回
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ImageDto'
+      inventoryPolicy:
+        type: integer
+        format: int32
+        description: 库存策略（1 = 拍下减库存，2 = 付款减库存）
+        # allowEmptyValue: false
+      largeAvatar:
+        description: 主图大图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      largeImages:
+        type: array
+        description: 相册大图图片，仅在获取详情时返回
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ImageDto'
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      mediumImages:
+        type: array
+        description: 相册中图图片，仅在获取详情时返回
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ImageDto'
+      middleAvatar:
+        description: 主图中图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      preSaleTime:
+        type: integer
+        format: int64
+        description: 预售时间
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 商品的属性值性
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ProductPropDto'
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      quantity:
+        type: integer
+        format: int32
+        description: 总库存量
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      skus:
+        type: array
+        description: sku列表，仅在获取详情时返回
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuDto'
+      sort:
+        type: integer
+        format: int32
+        description: '排序,越小越优先'
+        # allowEmptyValue: false
+      specs:
+        type: array
+        description: 商品规格信息
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ProductPropDto'
+      textDescription:
+        type: array
+        description: 多行文本详情，仅在获取详情时返回
+        # allowEmptyValue: false
+        items:
+          type: string
+      title:
+        type: string
+        description: 标题
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 商品类型（1 = 普通商品，2 = 赠品，3 = 虚拟商品）
+        # allowEmptyValue: false
+      unit:
+        type: string
+        description: 计量单位
+        # allowEmptyValue: false
+      usp:
+        type: string
+        description: 卖点/推荐
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+    title: ProductDto
+    description: 商品
+  ProductMappingDto:
+    type: object
+    required:
+      - productId
+    properties:
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      skuMappings:
+        type: array
+        description: sku映射列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuMappingDto'
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID
+        # allowEmptyValue: false
+    title: ProductMappingDto
+  ProductPropDto:
+    type: object
+    required:
+      - pid
+      - pname
+      - propVals
+    properties:
+      pid:
+        type: integer
+        format: int64
+        description: 属性项ID
+        # allowEmptyValue: false
+      pname:
+        type: string
+        description: 属性项名称
+        # allowEmptyValue: false
+      propVals:
+        type: array
+        description: 属性值列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/PropSpecValDto'
+    title: ProductPropDto
+    description: 商品属性信息
+  PropDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - name
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      parentPid:
+        type: integer
+        format: int64
+        description: 上级属性项ID
+        # allowEmptyValue: false
+      parentVid:
+        type: integer
+        format: int64
+        description: 上级属性值ID
+        # allowEmptyValue: false
+    title: PropDto
+    description: 属性项
+  PropSpecValDto:
+    type: object
+    required:
+      - propValId
+      - propValName
+    properties:
+      image:
+        description: 规格值图片原图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      propValId:
+        type: integer
+        format: int64
+        description: 规格值ID
+        # allowEmptyValue: false
+      propValName:
+        type: string
+        description: 规格值名称
+        # allowEmptyValue: false
+      thumbImage:
+        description: 规格值小图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+    title: PropSpecValDto
+    description: 商品的规格值
+  PropValDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - name
+      - pid
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      pid:
+        type: integer
+        format: int64
+        description: 属性项ID
+        # allowEmptyValue: false
+    title: PropValDto
+    description: 属性值
+  Result:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0表示成功
+        # allowEmptyValue: false
+      msg:
+        type: string
+        description: 错误信息
+        # allowEmptyValue: false
+    title: Result
+  SkuDto:
+    type: object
+    required:
+      - costPrice
+      - ctime
+      - frozen
+      - id
+      - marketPrice
+      - onSale
+      - price
+      - productId
+      - purchasePrice
+      - quantity
+    properties:
+      code:
+        type: string
+        description: 规格编码/条形码
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 用户自定义规格编码
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性
+        # allowEmptyValue: false
+      frozen:
+        type: integer
+        format: int32
+        description: 冻结量
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: SKU ID
+        # allowEmptyValue: false
+      image:
+        description: 规格图片
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      quantity:
+        type: integer
+        format: int32
+        description: 库存量
+        # allowEmptyValue: false
+      specs:
+        type: array
+        description: 规格信息，单规格商品为空
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SkuSpecDto'
+      thumbImage:
+        description: 规格小图
+        # allowEmptyValue: false
+        $ref: '#/definitions/ImageDto'
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+    title: SkuDto
+    description: Sku信息
+  SkuMappingDto:
+    type: object
+    required:
+      - skuId
+    properties:
+      extendFields:
+        type: array
+        description: 扩展字段配置
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      skuId:
+        type: integer
+        format: int64
+        description: SKUID
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID
+        # allowEmptyValue: false
+    title: SkuMappingDto
+  SkuSpecDto:
+    type: object
+    required:
+      - pid
+      - pname
+      - vid
+      - vname
+    properties:
+      pid:
+        type: integer
+        format: int64
+        description: 规格项ID
+        # allowEmptyValue: false
+      pname:
+        type: string
+        description: 规格项名称
+        # allowEmptyValue: false
+      vid:
+        type: integer
+        format: int64
+        description: 规格值ID
+        # allowEmptyValue: false
+      vname:
+        type: string
+        description: 规格值名称
+        # allowEmptyValue: false
+    title: SkuSpecDto
+    description: SKU规格信息
+  SortSpecDto:
+    type: object
+    required:
+      - ignoreCase
+      - property
+      - type
+    properties:
+      ignoreCase:
+        type: boolean
+        example: false
+        description: '是否忽略大小写,默认忽略'
+        # allowEmptyValue: false
+      property:
+        type: string
+        description: 排序属性
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: '排序类型,由小到大：ASC,由大到小：DSC,默认:DEFAULT'
+        # allowEmptyValue: false
+    title: SortSpecDto
+  UpdateBrandDto:
+    type: object
+    properties:
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID，为null不更新，为空删除全部，非空数组全量替换
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID，为null不更新，为空删除全部，非空全量替换
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 品牌ID
+        # allowEmptyValue: false
+      introduction:
+        type: string
+        description: 介绍
+        # allowEmptyValue: false
+      keywords:
+        type: array
+        description: 关键字，为null不更新，为空清除，非空全量替换
+        # allowEmptyValue: false
+        items:
+          type: string
+      logo:
+        type: string
+        description: 商标图片链接
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，需要更新扩展属性时必须
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      url:
+        type: string
+        description: 网站链接
+        # allowEmptyValue: false
+    title: UpdateBrandDto
+    description: 更新品牌
+  UpdateCategoryDto:
+    type: object
+    required:
+      - id
+    properties:
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID
+        # allowEmptyValue: false
+      icon:
+        type: string
+        description: 分类图标url
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 分类名
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 上级分类ID，需要已经存在
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 分类属性，为null不更新，为空清除，不为空全量替换
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryPropDto'
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID，需要更新扩展属性时必须
+        # allowEmptyValue: false
+      sort:
+        type: integer
+        format: int32
+        description: 分类排序，越小越靠前
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共分类时为空，创建私有分类时必须
+        # allowEmptyValue: false
+    title: UpdateCategoryDto
+    description: 更新分类
+  UpdateInventoryDto:
+    type: object
+    required:
+      - count
+      - productId
+      - skuId
+    properties:
+      count:
+        type: integer
+        format: int32
+        description: 数量
+        # allowEmptyValue: false
+      productId:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      skuId:
+        type: integer
+        format: int64
+        description: Sku ID
+        # allowEmptyValue: false
+    title: UpdateInventoryDto
+    description: 更新库存
+  UpdateProductDto:
+    type: object
+    required:
+      - id
+      - shopId
+    properties:
+      avatar:
+        type: string
+        description: 主图url
+        # allowEmptyValue: false
+      brandIds:
+        type: array
+        description: 商品关联的品牌ID，null不更新，为空清除原来的分类，非空全量替换分类
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      categoryIds:
+        type: array
+        description: 商品关联的分类树叶子ID，null不更新，为空清除原来的分类，非空全量替换分类
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      code:
+        type: string
+        description: 商品编码/货号
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 商家自定义编码
+        # allowEmptyValue: false
+      englishName:
+        type: string
+        description: 英文名称
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID，为null不更新，为空删除全部，非空数组全量替换
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID，为null不更新，为空删除全部，非空全量替换
+        # allowEmptyValue: false
+      htmlDescription:
+        type: string
+        description: html详情
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: 商品ID
+        # allowEmptyValue: false
+      imageDescription:
+        type: array
+        description: 图片详情，一组图片url
+        # allowEmptyValue: false
+        items:
+          type: string
+      images:
+        type: array
+        description: 相册图片
+        # allowEmptyValue: false
+        items:
+          type: string
+      inventoryPolicy:
+        type: integer
+        format: int32
+        description: 库存策略（1 = 拍下减库存，2 = 付款减库存）
+        # allowEmptyValue: false
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 名称
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      preSaleTime:
+        type: integer
+        format: int64
+        description: 预售时间
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      props:
+        type: array
+        description: 商品的属性值
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateProductPropDto'
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      shortName:
+        type: string
+        description: 简称
+        # allowEmptyValue: false
+      skus:
+        type: array
+        description: 更新规格时，全量替换原来的sku
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateSkuDto'
+      sort:
+        type: integer
+        format: int32
+        description: '排序,越小越优先'
+        # allowEmptyValue: false
+      specs:
+        type: array
+        description: 商品规格信息，为null不更新，为空是单规格商品，非空是多规格商品，更新规格需要同时全量更新sku
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CreateProductPropDto'
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID，创建公共品牌时为空，创建私有品牌时必须
+        # allowEmptyValue: false
+      textDescription:
+        type: array
+        description: 多行文本详情
+        # allowEmptyValue: false
+        items:
+          type: string
+      title:
+        type: string
+        description: 标题
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 商品类型（1 = 普通商品，2 = 赠品，3 = 虚拟商品）
+        # allowEmptyValue: false
+      unit:
+        type: string
+        description: 计量单位
+        # allowEmptyValue: false
+      usp:
+        type: string
+        description: 卖点/推荐
+        # allowEmptyValue: false
+    title: UpdateProductDto
+    description: 更新商品
+  UpdateSkuDto:
+    type: object
+    required:
+      - id
+      - shopId
+      - tenantId
+    properties:
+      code:
+        type: string
+        description: 规格编码/条形码
+        # allowEmptyValue: false
+      costPrice:
+        type: integer
+        format: int64
+        description: 成本价（分）
+        # allowEmptyValue: false
+      customId:
+        type: string
+        description: 用户自定义规格编码
+        # allowEmptyValue: false
+      extendFields:
+        type: array
+        description: 扩展字段配置，需要指定店铺ID，为null不更新，为空删除全部，非空数组全量替换
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ExtendFields'
+      extendProps:
+        type: object
+        description: 扩展属性，需要指定店铺ID，为null不更新，为空删除全部，非空全量替换
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: SKU ID
+        # allowEmptyValue: false
+      image:
+        type: string
+        description: 规格图片
+        # allowEmptyValue: false
+      marketPrice:
+        type: integer
+        format: int64
+        description: 市场价/划线价/吊牌价（分））
+        # allowEmptyValue: false
+      onSale:
+        type: boolean
+        example: false
+        description: 是否在售
+        # allowEmptyValue: false
+      price:
+        type: integer
+        format: int64
+        description: 销售价（分）
+        # allowEmptyValue: false
+      purchasePrice:
+        type: integer
+        format: int64
+        description: 采购价/批发价/分销价（分）
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+    title: UpdateSkuDto
+    description: 更新SKU
+  ExtendFields:
+    description: 扩展字段元数据
+    type: object
+    required:
+      - key
+      - title
+      - type
+    properties:
+      defaultValue:
+        type: object
+        description: 默认值，如：0
+        # allowEmptyValue: false
+      key:
+        type: string
+        description: 字段名，如：volume
+        # allowEmptyValue: false
+      title:
+        type: string
+        description: 字段标题，如：体积
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: 数据类型 string/long/double，如：long
+        # allowEmptyValue: false
+    title: ExtendFields

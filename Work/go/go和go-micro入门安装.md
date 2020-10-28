@@ -9,6 +9,9 @@ $ brew install go
 # check go install info
 $ brew info go
 
+# create dir go
+$ mkdir ~/go
+
 # or .bashrc
 $ cat ~/.zshrc
 export GOPATH=~/go

@@ -76,7 +76,7 @@ paths:
         "405":
           description: "Invalid input"
   
-  /cashier/pay:
+  /cashier/pay/{id}:
     post:
       tags:
         - "订单结算"
@@ -131,8 +131,8 @@ definitions:
         properties:
           method:
             description: 支付方式
-            type: integer
-            format: int32
+            type: string
+            format: string
       ump:
         description: 营销信息
         type: object
@@ -141,7 +141,8 @@ definitions:
             description: 使用的优惠券
             type: array
             items:
-              type: string
+              type: integer
+              format: int64
       source:
         description: 交易来源信息
         type: object
@@ -159,8 +160,8 @@ definitions:
     type: "object"
     properties:
       shopId:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 店铺ID
       remark:
         description: 备注
@@ -178,22 +179,23 @@ definitions:
             description: 使用的店铺优惠券列表
             type: array
             items:
-              type: string
+              type: integer
+              format: int64
 
   CashierTradeItemRequest:
     type: object
     properties:
       skuId:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 规格ID
       productId:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 商品ID
       quantity:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 数量
 
   CashierResponse:
@@ -224,13 +226,13 @@ definitions:
                   format: string
                   description: 支付方式名称
                 value:
-                  type: integer
-                  format: int32
+                  type: string
+                  format: string
                   description: 支付方式
           method:
             description: 选择的支付方式
-            type: integer
-            format: int32
+            type: string
+            format: string
           total:
             description: 总价
             type: integer
@@ -310,8 +312,8 @@ definitions:
     type: object
     properties:
       productId:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 商品ID
       skuId:
         type: "integer"
@@ -378,8 +380,8 @@ definitions:
     type: object
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 优惠券ID
       userId:
         type: "integer"
@@ -437,14 +439,18 @@ definitions:
         type: integer
         format: int64
         description: 优惠金额上限（最多减xxx），单位：分
-
+      rangeType:  
+        description: 使用范围 --- 无指定 None(0), 指定Sku SKU(1), 指定品类 CATEGORY(2);
+        type: "integer"
+        format: "int64"
+        
   SimpleShop:
     type: object
     description: 店铺概要信息
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
         description: 店铺ID
       name:
         type: string

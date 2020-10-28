@@ -1,0 +1,2140 @@
+swagger: '2.0'
+info:
+  description: shop-srv
+  version: 1.0-SNAPSHOT
+  title: shop-srv
+  contact:
+    name: Luckyfish
+    url: 'http://www.lf.com'
+    email: developer@luckyfish.com
+host: '127.0.0.1:10214'
+basePath: /
+tags:
+  - name: address-rest
+    description: 店铺地址服务接口
+  - name: category-rest
+    description: Category Rest
+  - name: config-rest
+    description: 配置服务接口
+  - name: shop-rest
+    description: 店铺服务接口
+  - name: template-rest
+    description: 模版服务接口
+paths:
+  /address/create:
+    post:
+      tags:
+        - address-rest
+      summary: 创建店铺地址
+      operationId: createUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAddressDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«AddressDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/address/list/{shopId}':
+    get:
+      tags:
+        - address-rest
+      summary: 获取店铺所有地址
+      operationId: listUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: path
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«AddressDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/address/listByType/{shopId}':
+    get:
+      tags:
+        - address-rest
+      summary: 获取店铺所有地址
+      operationId: listByTypeUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: path
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+        - name: type
+          in: query
+          description: type
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«AddressDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /address/update:
+    post:
+      tags:
+        - address-rest
+      summary: 更新店铺地址
+      operationId: updateUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAddressDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«AddressDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/address/{id}':
+    get:
+      tags:
+        - address-rest
+      summary: 查询店铺地址
+      operationId: retrieveUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«AddressDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - address-rest
+      summary: 删除店铺地址
+      operationId: deleteUsingDELETE
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /category/batchCreate:
+    post:
+      tags:
+        - category-rest
+      summary: 批量添加类目
+      operationId: batchCreateUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dtos
+          description: dtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CreateCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/batchRetrieve:
+    post:
+      tags:
+        - category-rest
+      summary: 批量查询类目
+      operationId: batchRetrieveUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«CategoryDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/create:
+    post:
+      tags:
+        - category-rest
+      summary: 创建类目
+      operationId: createUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createDto
+          description: createDto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/expand:
+    get:
+      tags:
+        - category-rest
+      summary: 展开分类树结构
+      operationId: expandUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Map«long,CategoryExpandDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /category/update:
+    post:
+      tags:
+        - category-rest
+      summary: 更新类目
+      operationId: updateUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateCategoryDto
+          description: updateCategoryDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/category/{id}':
+    get:
+      tags:
+        - category-rest
+      summary: 查询类目
+      operationId: retrieveUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«CategoryDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - category-rest
+      summary: 删除类目
+      operationId: deleteUsingDELETE_1
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /config/batchRetrieveShopAllConfigs:
+    get:
+      tags:
+        - config-rest
+      summary: 查询店铺全部配置
+      operationId: batchRetrieveShopAllConfigsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ConfigDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /config/batchRetrieveShopConfigs:
+    get:
+      tags:
+        - config-rest
+      summary: 批量查询店铺配置
+      operationId: batchRetrieveShopConfigsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+        - name: keys
+          in: query
+          description: keys
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ConfigDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /config/create:
+    post:
+      tags:
+        - config-rest
+      summary: 创建店铺配置
+      operationId: createUsingPOST_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createDto
+          description: createDto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateConfigDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ConfigDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /config/retrieveShopConfig:
+    get:
+      tags:
+        - config-rest
+      summary: 查询店铺配置
+      operationId: retrieveShopConfigUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+        - name: key
+          in: query
+          description: key
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ConfigDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /config/update:
+    post:
+      tags:
+        - config-rest
+      summary: 更新配置
+      operationId: updateUsingPOST_2
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateDto
+          description: updateDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateConfigDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ConfigDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/config/{id}':
+    delete:
+      tags:
+        - config-rest
+      summary: 删除配置
+      operationId: deleteUsingDELETE_2
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /shop/addCategories:
+    post:
+      tags:
+        - shop-rest
+      summary: 批量创建店铺类目
+      operationId: addCategoriesUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dtos
+          description: dtos
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CreateShopCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/batchRetrieve:
+    post:
+      tags:
+        - shop-rest
+      summary: 查询店铺
+      operationId: batchRetrieveUsingPOST_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ids
+          description: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ShopDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/batchRetrieveByTenant:
+    get:
+      tags:
+        - shop-rest
+      summary: batchRetrieveByTenant
+      operationId: batchRetrieveByTenantUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: tenantId
+          in: query
+          description: tenantId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ShopDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/create:
+    post:
+      tags:
+        - shop-rest
+      summary: 创建店铺
+      operationId: createUsingPOST_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createDto
+          description: createDto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateShopDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ShopDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/deleteCategories:
+    post:
+      tags:
+        - shop-rest
+      summary: 批量删除店铺类目
+      operationId: deleteCategoriesUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: dto
+          description: dto
+          required: true
+          schema:
+            $ref: '#/definitions/DeleteShopCategoryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/page:
+    post:
+      tags:
+        - shop-rest
+      summary: 店铺分页查询
+      operationId: pageUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: queryDto
+          description: queryDto
+          required: true
+          schema:
+            $ref: '#/definitions/PageQueryDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«Page«ShopDto»»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/retrieveByMobile:
+    get:
+      tags:
+        - shop-rest
+      summary: 通过管理员id查询
+      operationId: retrieveByMobileUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: mobile
+          in: query
+          description: mobile
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«ShopDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /shop/update:
+    post:
+      tags:
+        - shop-rest
+      summary: update
+      operationId: updateUsingPOST_3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateDto
+          description: updateDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateShopDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ShopDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/shop/{id}':
+    get:
+      tags:
+        - shop-rest
+      summary: 查询店铺
+      operationId: retrieveUsingGET_2
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«ShopDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /template/batchRetrieveShopAllTemplates:
+    get:
+      tags:
+        - template-rest
+      summary: 查询店铺全部配置模版
+      operationId: batchRetrieveShopAllTemplatesUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«TemplateDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /template/batchRetrieveShopTemplates:
+    get:
+      tags:
+        - template-rest
+      summary: 批量查询店铺配置模版
+      operationId: batchRetrieveShopTemplatesUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+        - name: keys
+          in: query
+          description: keys
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«List«TemplateDto»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /template/create:
+    post:
+      tags:
+        - template-rest
+      summary: 创建配置模版
+      operationId: createUsingPOST_4
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: templateDto
+          description: templateDto
+          required: true
+          schema:
+            $ref: '#/definitions/CreateTemplateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«TemplateDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /template/retrieveShopTemplate:
+    get:
+      tags:
+        - template-rest
+      summary: 查询店铺配置模版
+      operationId: retrieveShopTemplateUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: shopId
+          in: query
+          description: shopId
+          required: true
+          type: integer
+          format: int64
+        - name: key
+          in: query
+          description: key
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«TemplateDto»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /template/update:
+    post:
+      tags:
+        - template-rest
+      summary: 更新店铺模版
+      operationId: updateUsingPOST_4
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: templateDto
+          description: templateDto
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateTemplateDto'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResponse«TemplateDto»'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/template/{id}':
+    delete:
+      tags:
+        - template-rest
+      summary: 删除店铺模版
+      operationId: deleteUsingDELETE_3
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Result'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+definitions:
+  AddressDto:
+    type: object
+    properties:
+      address:
+        type: string
+        description: 详细地址
+        # allowEmptyValue: false
+      city:
+        type: string
+        description: 市
+        # allowEmptyValue: false
+      countryCode:
+        type: string
+        description: 联系手机号国家代码
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+      district:
+        type: string
+        description: 区
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      isDefault:
+        type: boolean
+        example: false
+        description: 是否默认地址
+        # allowEmptyValue: false
+      mobile:
+        type: string
+        description: 联系手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 收件人姓名
+        # allowEmptyValue: false
+      postalCode:
+        type: string
+        description: 邮编
+        # allowEmptyValue: false
+      province:
+        type: string
+        description: 省
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: 地址类型。1：退货地址
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+    title: AddressDto
+  CategoryDto:
+    type: object
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 类目名称
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 父类目
+        # allowEmptyValue: false
+      sort:
+        type: integer
+        format: int32
+        description: 类目排序，升序顺序
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+    title: CategoryDto
+  CategoryExpandDto:
+    type: object
+    required:
+      - id
+    properties:
+      children:
+        type: array
+        description: 子分类ID列表
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      id:
+        type: integer
+        format: int64
+        description: 分类ID
+        # allowEmptyValue: false
+      leaf:
+        type: boolean
+      parent:
+        type: boolean
+      path:
+        type: array
+        description: 祖先路径
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      root:
+        type: boolean
+    title: CategoryExpandDto
+  ConfigDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - key
+      - shopId
+      - value
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 记录创建时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      key:
+        type: string
+        description: 配置key
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 记录更新建时间
+        # allowEmptyValue: false
+      value:
+        type: object
+        description: 配置值，JSON格式
+        # allowEmptyValue: false
+    title: ConfigDto
+  CreateAddressDto:
+    type: object
+    required:
+      - shopId
+      - type
+    properties:
+      address:
+        type: string
+        example: 大冲商务中心
+        description: 详细地址
+        # allowEmptyValue: false
+      city:
+        type: string
+        example: 深圳市
+        description: 市
+        # allowEmptyValue: false
+      countryCode:
+        type: string
+        example: 86
+        description: 联系手机号国家代码
+        # allowEmptyValue: false
+      district:
+        type: string
+        example: 南山区
+        description: 区
+        # allowEmptyValue: false
+      isDefault:
+        type: boolean
+      mobile:
+        type: string
+        example: 18866668888
+        description: 联系手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        example: 张三
+        description: 收件人姓名
+        # allowEmptyValue: false
+      postalCode:
+        type: string
+        example: 518000
+        description: 邮编
+        # allowEmptyValue: false
+      province:
+        type: string
+        example: 广东省
+        description: 省
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        example: 123456
+        description: 店铺ID
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        example: 1
+        description: 地址类型。1：退货地址
+        # allowEmptyValue: false
+    title: CreateAddressDto
+  CreateCategoryDto:
+    type: object
+    required:
+      - name
+      - parentId
+      - sort
+    properties:
+      name:
+        type: string
+        description: 类目名称
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 父类目
+        # allowEmptyValue: false
+      sort:
+        type: integer
+        format: int32
+        description: 类目排序，升序顺序
+        # allowEmptyValue: false
+    title: CreateCategoryDto
+  CreateConfigDto:
+    type: object
+    required:
+      - key
+      - shopId
+      - value
+    properties:
+      key:
+        type: string
+        description: 配置key
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      value:
+        type: object
+        description: 配置值，JSON格式
+        # allowEmptyValue: false
+    title: CreateConfigDto
+  CreateShopCategoryDto:
+    type: object
+    required:
+      - categoryId
+      - shopId
+    properties:
+      categoryId:
+        type: integer
+        format: int64
+        description: 类目ID
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+    title: CreateShopCategoryDto
+  CreateShopDto:
+    type: object
+    required:
+      - categoryIds
+      - contact
+      - mobile
+      - ownerMobile
+      - tenantId
+      - type
+    properties:
+      appId:
+        type: string
+        description: 来自哪个应用
+        # allowEmptyValue: false
+      background:
+        type: string
+        description: 店铺背景图
+        # allowEmptyValue: false
+      categoryIds:
+        type: array
+        description: 分类
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      channel:
+        type: string
+      contact:
+        type: string
+        description: 店铺联系人
+        # allowEmptyValue: false
+      description:
+        type: string
+        description: 店铺描述
+        # allowEmptyValue: false
+      email:
+        type: string
+        description: 店铺联系人QQ
+        # allowEmptyValue: false
+      logo:
+        type: string
+        description: 店铺LOGO
+        # allowEmptyValue: false
+      logoHd:
+        type: string
+        description: 店铺LOGO高清中图
+        # allowEmptyValue: false
+      logoMedium:
+        type: string
+        description: 店铺LOGO中图
+        # allowEmptyValue: false
+      logoThumbnail:
+        type: string
+        description: 店铺LOGO缩略图
+        # allowEmptyValue: false
+      mobile:
+        type: string
+        description: 店铺联系人手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 店铺名称
+        # allowEmptyValue: false
+      ownerMobile:
+        type: string
+        description: 管理员手机号
+        # allowEmptyValue: false
+      qq:
+        type: string
+        description: 店铺联系人QQ
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+        description: 租户ID
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: '店铺类型,1:普通店铺'
+        # allowEmptyValue: false
+      wechat:
+        type: string
+        description: 店铺联系人微信
+        # allowEmptyValue: false
+      wechatQrCode:
+        type: string
+        description: 店铺联系人微信二维码
+        # allowEmptyValue: false
+      wechatRecommend:
+        type: string
+        description: 微信推荐描述
+        # allowEmptyValue: false
+    title: CreateShopDto
+  CreateTemplateDto:
+    type: object
+    required:
+      - key
+      - metadata
+      - shopId
+    properties:
+      key:
+        type: string
+        description: 模版key
+        # allowEmptyValue: false
+      metadata:
+        type: object
+        description: 模版元数据信息，JSON格式
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+    title: CreateTemplateDto
+  DataResponse«AddressDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/AddressDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«AddressDto»
+    description: 返回数据
+  DataResponse«CategoryDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/CategoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«CategoryDto»
+    description: 返回数据
+  DataResponse«ConfigDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/ConfigDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«ConfigDto»
+    description: 返回数据
+  DataResponse«List«AddressDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/AddressDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«AddressDto»»
+    description: 返回数据
+  DataResponse«List«CategoryDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/CategoryDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«CategoryDto»»
+    description: 返回数据
+  DataResponse«List«ConfigDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ConfigDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«ConfigDto»»
+    description: 返回数据
+  DataResponse«List«ShopDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ShopDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«ShopDto»»
+    description: 返回数据
+  DataResponse«List«TemplateDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: array
+        description: 返回数据
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/TemplateDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«List«TemplateDto»»
+    description: 返回数据
+  'DataResponse«Map«long,CategoryExpandDto»»':
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        type: object
+        description: 返回数据
+        # allowEmptyValue: false
+        additionalProperties:
+          $ref: '#/definitions/CategoryExpandDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: 'DataResponse«Map«long,CategoryExpandDto»»'
+    description: 返回数据
+  DataResponse«Page«ShopDto»»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/Page«ShopDto»'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«Page«ShopDto»»
+    description: 返回数据
+  DataResponse«ShopDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/ShopDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«ShopDto»
+    description: 返回数据
+  DataResponse«TemplateDto»:
+    type: object
+    required:
+      - code
+      - data
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0代表成功
+        # allowEmptyValue: false
+      data:
+        description: 返回数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/TemplateDto'
+      msg:
+        type: string
+        description: 错误消息
+        # allowEmptyValue: false
+    title: DataResponse«TemplateDto»
+    description: 返回数据
+  DeleteShopCategoryDto:
+    type: object
+    required:
+      - categoryIds
+      - shopId
+    properties:
+      categoryIds:
+        type: array
+        description: 类目ID列表
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+    title: DeleteShopCategoryDto
+  'Map«long,CategoryExpandDto»':
+    type: object
+    title: 'Map«long,CategoryExpandDto»'
+    additionalProperties:
+      $ref: '#/definitions/CategoryExpandDto'
+  PageExtraDto:
+    type: object
+    required:
+      - pageNo
+      - pageSize
+      - totalCount
+    properties:
+      pageNo:
+        type: integer
+        format: int32
+        description: 当前页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 翻页大小
+        # allowEmptyValue: false
+      totalCount:
+        type: integer
+        format: int64
+        description: 总数
+        # allowEmptyValue: false
+    title: PageExtraDto
+  PageQueryDto:
+    type: object
+    properties:
+      filters:
+        type: object
+        description: 过滤条件
+        # allowEmptyValue: false
+      pageNo:
+        type: integer
+        format: int32
+        description: 页码
+        # allowEmptyValue: false
+      pageSize:
+        type: integer
+        format: int32
+        description: 页数
+        # allowEmptyValue: false
+      sort:
+        type: array
+        description: 排序
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/SortSpecDto'
+    title: PageQueryDto
+  Page«ShopDto»:
+    type: object
+    required:
+      - data
+      - extra
+    properties:
+      data:
+        type: array
+        description: 数据列表
+        # allowEmptyValue: false
+        items:
+          $ref: '#/definitions/ShopDto'
+      extra:
+        description: 相关数据
+        # allowEmptyValue: false
+        $ref: '#/definitions/PageExtraDto'
+    title: Page«ShopDto»
+  Result:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 错误码，0表示成功
+        # allowEmptyValue: false
+      msg:
+        type: string
+        description: 错误信息
+        # allowEmptyValue: false
+    title: Result
+  ShopDto:
+    type: object
+    properties:
+      appId:
+        type: string
+        description: 来自哪个应用
+        # allowEmptyValue: false
+      background:
+        type: string
+        description: 店铺背景图
+        # allowEmptyValue: false
+      categoryIds:
+        type: array
+        description: 店铺类目
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      channel:
+        type: string
+      contact:
+        type: string
+        description: 店铺联系人
+        # allowEmptyValue: false
+      ctime:
+        type: integer
+        format: int64
+        description: 创建时间
+        # allowEmptyValue: false
+      description:
+        type: string
+        description: 店铺描述
+        # allowEmptyValue: false
+      email:
+        type: string
+        description: 店铺负责人邮箱
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      logo:
+        type: string
+        description: 店铺LOGO
+        # allowEmptyValue: false
+      logoHd:
+        type: string
+        description: 店铺LOGO高清图
+        # allowEmptyValue: false
+      logoMedium:
+        type: string
+        description: 店铺LOGO中图
+        # allowEmptyValue: false
+      logoThumbnail:
+        type: string
+        description: 店铺LOGO缩略图
+        # allowEmptyValue: false
+      mobile:
+        type: string
+        description: 店铺联系人手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 店铺名称
+        # allowEmptyValue: false
+      ownerMobile:
+        type: string
+      qq:
+        type: string
+        description: 店铺负责人QQ
+        # allowEmptyValue: false
+      tenantId:
+        type: integer
+        format: int64
+      type:
+        type: integer
+        format: int32
+        description: '店铺类型,1:普通店铺'
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 更新时间
+        # allowEmptyValue: false
+      wechat:
+        type: string
+        description: 店铺负责人微信
+        # allowEmptyValue: false
+      wechatQrCode:
+        type: string
+        description: 店铺负责人微信二维码
+        # allowEmptyValue: false
+      wechatRecommend:
+        type: string
+        description: 微信推荐描述
+        # allowEmptyValue: false
+    title: ShopDto
+  SortSpecDto:
+    type: object
+    required:
+      - ignoreCase
+      - property
+      - type
+    properties:
+      ignoreCase:
+        type: boolean
+        example: false
+        description: '是否忽略大小写,默认忽略'
+        # allowEmptyValue: false
+      property:
+        type: string
+        description: 排序属性
+        # allowEmptyValue: false
+      type:
+        type: string
+        description: '排序类型,由小到大：ASC,由大到小：DSC,默认:DEFAULT'
+        # allowEmptyValue: false
+    title: SortSpecDto
+  TemplateDto:
+    type: object
+    required:
+      - ctime
+      - id
+      - key
+      - metadata
+      - shopId
+    properties:
+      ctime:
+        type: integer
+        format: int64
+        description: 记录创建时间
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      key:
+        type: string
+        description: 模版key
+        # allowEmptyValue: false
+      metadata:
+        type: object
+        description: 模版元数据信息，JSON格式
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: 店铺ID
+        # allowEmptyValue: false
+      utime:
+        type: integer
+        format: int64
+        description: 记录更新建时间
+        # allowEmptyValue: false
+    title: TemplateDto
+  UpdateAddressDto:
+    type: object
+    required:
+      - id
+    properties:
+      address:
+        type: string
+        example: 大冲商务中心
+        description: 详细地址
+        # allowEmptyValue: false
+      city:
+        type: string
+        example: 深圳市
+        description: 市
+        # allowEmptyValue: false
+      countryCode:
+        type: string
+        example: 86
+        description: 联系手机号国家代码
+        # allowEmptyValue: false
+      district:
+        type: string
+        example: 南山区
+        description: 区
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        example: 123456
+        description: 地址ID
+        # allowEmptyValue: false
+      isDefault:
+        type: boolean
+      mobile:
+        type: string
+        example: 18866668888
+        description: 联系手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        example: 张三
+        description: 收件人姓名
+        # allowEmptyValue: false
+      postalCode:
+        type: string
+        example: 518000
+        description: 邮编
+        # allowEmptyValue: false
+      province:
+        type: string
+        example: 广东省
+        description: 省
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        example: 1
+        description: 地址类型。1：退货地址
+        # allowEmptyValue: false
+    title: UpdateAddressDto
+  UpdateCategoryDto:
+    type: object
+    required:
+      - name
+      - parentId
+      - sort
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 类目名称
+        # allowEmptyValue: false
+      parentId:
+        type: integer
+        format: int64
+        description: 父类目
+        # allowEmptyValue: false
+      sort:
+        type: integer
+        format: int32
+        description: 类目排序，升序顺序
+        # allowEmptyValue: false
+    title: UpdateCategoryDto
+  UpdateConfigDto:
+    type: object
+    required:
+      - key
+      - shopId
+      - value
+    properties:
+      key:
+        type: string
+        description: 配置key
+        # allowEmptyValue: false
+      shopId:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      value:
+        type: object
+        description: 配置值，JSON格式
+        # allowEmptyValue: false
+    title: UpdateConfigDto
+  UpdateShopDto:
+    type: object
+    required:
+      - categoryIds
+      - contact
+      - id
+      - mobile
+      - name
+      - type
+    properties:
+      appId:
+        type: string
+        description: 来自哪个应用
+        # allowEmptyValue: false
+      background:
+        type: string
+        description: 店铺背景图
+        # allowEmptyValue: false
+      categoryIds:
+        type: array
+        description: 分类
+        # allowEmptyValue: false
+        items:
+          type: integer
+          format: int64
+      contact:
+        type: string
+        description: 店铺联系人
+        # allowEmptyValue: false
+      description:
+        type: string
+        description: 店铺描述
+        # allowEmptyValue: false
+      email:
+        type: string
+        description: 店铺联系人QQ
+        # allowEmptyValue: false
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      logo:
+        type: string
+        description: 店铺LOGO
+        # allowEmptyValue: false
+      logoHd:
+        type: string
+        description: 店铺LOGO高清中图
+        # allowEmptyValue: false
+      logoMedium:
+        type: string
+        description: 店铺LOGO中图
+        # allowEmptyValue: false
+      logoThumbnail:
+        type: string
+        description: 店铺LOGO缩略图
+        # allowEmptyValue: false
+      mobile:
+        type: string
+        description: 店铺联系人手机号
+        # allowEmptyValue: false
+      name:
+        type: string
+        description: 店铺名称
+        # allowEmptyValue: false
+      qq:
+        type: string
+        description: 店铺联系人QQ
+        # allowEmptyValue: false
+      type:
+        type: integer
+        format: int32
+        description: '店铺类型,1:普通店铺'
+        # allowEmptyValue: false
+      wechat:
+        type: string
+        description: 店铺联系人微信
+        # allowEmptyValue: false
+      wechatQrCode:
+        type: string
+        description: 店铺联系人微信二维码
+        # allowEmptyValue: false
+      wechatRecommend:
+        type: string
+        description: 微信推荐描述
+        # allowEmptyValue: false
+    title: UpdateShopDto
+  UpdateTemplateDto:
+    type: object
+    required:
+      - id
+      - metadata
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: ID
+        # allowEmptyValue: false
+      metadata:
+        type: object
+        description: 模版元数据信息，JSON格式
+        # allowEmptyValue: false
+    title: UpdateTemplateDto

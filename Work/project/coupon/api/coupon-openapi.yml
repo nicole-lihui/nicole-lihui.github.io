@@ -516,7 +516,7 @@ definitions:
       couponTemplateId:
         type: array
         description: 批量领取的优惠券活动ID列表
-        # # allowEmptyValue: false
+        # allowEmptyValue: false
         items:
           type: integer
           format: int64
@@ -563,6 +563,10 @@ definitions:
         format: int64
         description: 优惠券
         # allowEmptyValue: false
+      amount: 
+        type: integer
+        format: int64
+        description: 可用时具体优惠金额
       selectable:
         type: boolean
         example: false
@@ -589,11 +593,12 @@ definitions:
       - bestBenefit
       - bestCouponIds
       - coupons
+      - shopBenefits
     properties:
       benefit:
         type: integer
         format: int64
-        description: 优惠金额
+        description: 总优惠金额，包括店铺券与平台券累计优惠
         # allowEmptyValue: false
       bestBenefit:
         type: integer
@@ -613,6 +618,20 @@ definitions:
         # allowEmptyValue: false
         items:
           $ref: '#/definitions/ComputeCouponItemDto'
+      shopBenefits:
+        type: object
+        description: 各个店铺的店铺券累计优惠
+        # allowEmptyValue: false
+        additionalProperties:
+          type: integer
+          format: int64
+      bestShopBenefits:
+        type: object
+        description: 各个店铺的最佳店铺券累计优惠
+        # allowEmptyValue: false
+        additionalProperties:
+          type: integer
+          format: int64
     title: ComputeCouponResultDto
   ComputeCouponTemplateDto:
     type: object
@@ -875,13 +894,13 @@ definitions:
         description: '优惠规则,当用户达到使用条件时,根据此规则生成优惠'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       consumeRules:
         type: array
         description: '使用规则,用户需要达到某种条件,才能使用此优惠券'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       consumedCount:
         type: integer
         format: int32
@@ -950,7 +969,7 @@ definitions:
         description: '领取规则,用户需要达到某种条件,才能领取此优惠券'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       title:
         type: string
         description: 标题
@@ -974,13 +993,13 @@ definitions:
         description: '优惠规则,当用户达到使用条件时,根据此规则生成优惠'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       consumeRules:
         type: array
         description: '使用规则,用户需要达到某种条件,才能使用此优惠券'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       description:
         type: string
         description: 描述
@@ -995,7 +1014,7 @@ definitions:
         description: '领取规则,用户需要达到某种条件,才能领取此优惠券'
         # allowEmptyValue: false
         items:
-          $ref: '#/definitions/Map«string,object»'
+          type: object
       title:
         type: string
         description: 标题
@@ -1363,12 +1382,6 @@ definitions:
       type: array
       items: 
         $ref: "#/definitions/CouponTemplateDto"
-      # $ref: '#/definitions/List'
-  'Map«string,object»':
-    type: object
-    title: 'Map«string,object»'
-    additionalProperties:
-      type: object
   PageExtraDto:
     type: object
     required:
