@@ -6,18 +6,22 @@
     - [2.1.1. Node](#211-node)
       - [2.1.1.1. 管理](#2111-管理)
       - [2.1.1.2. 节点信息](#2112-节点信息)
-      - [节点控制器](#节点控制器)
-      - [心跳机制](#心跳机制)
+      - [2.1.1.3. 节点控制器](#2113-节点控制器)
+      - [2.1.1.4. 节点容量](#2114-节点容量)
+      - [2.1.1.5. 节点拓扑](#2115-节点拓扑)
   - [2.2. api server](#22-api-server)
     - [2.2.1. 基础](#221-基础)
     - [2.2.2. 扩展](#222-扩展)
   - [2.3. etcd](#23-etcd)
   - [2.4. schedule](#24-schedule)
   - [2.5. controller manager](#25-controller-manager)
-    - [2.5.1. 节点控制器](#251-节点控制器)
-    - [2.5.2. 副本控制器](#252-副本控制器)
-    - [2.5.3. 端点控制器](#253-端点控制器)
-    - [2.5.4. 服务帐户和令牌控制器](#254-服务帐户和令牌控制器)
+    - [2.5.1. workload resources](#251-workload-resources)
+    - [2.5.2. 节点控制器](#252-节点控制器)
+      - [2.5.2.1. 心跳机制](#2521-心跳机制)
+      - [2.5.2.2. 可靠性](#2522-可靠性)
+    - [2.5.3. 副本控制器](#253-副本控制器)
+    - [2.5.4. 端点控制器](#254-端点控制器)
+    - [2.5.5. 服务帐户和令牌控制器](#255-服务帐户和令牌控制器)
   - [2.6. cloud-controller-manager](#26-cloud-controller-manager)
   - [2.7. kubelet](#27-kubelet)
   - [2.8. kube-proxy](#28-kube-proxy)
@@ -43,8 +47,23 @@
     - [4.1.1. schedule 架构与组件](#411-schedule-架构与组件)
     - [4.1.2. 调度流程](#412-调度流程)
     - [4.1.3. 调度算法](#413-调度算法)
-- [5. 参考资料](#5-参考资料)
-- [6. 问题](#6-问题)
+- [5. 通信](#5-通信)
+  - [5.1. 控制面板（Master） -> 节点（Node）](#51-控制面板master---节点node)
+    - [5.1.1. apiserver -> Node](#511-apiserver---node)
+    - [5.1.2. SSH 隧道](#512-ssh-隧道)
+    - [5.1.3. Konnectivity 服务](#513-konnectivity-服务)
+- [6. 网络](#6-网络)
+  - [6.1. 虚拟 IP 和 Service 代理](#61-虚拟-ip-和-service-代理)
+    - [6.1.1. userspace 代理模式](#611-userspace-代理模式)
+    - [6.1.2. iptables 代理模式](#612-iptables-代理模式)
+    - [6.1.3. IPVS 代理模式](#613-ipvs-代理模式)
+    - [虚拟IP](#虚拟ip)
+- [服务发现](#服务发现)
+- [7. Deployment](#7-deployment)
+  - [7.1. K8S创建Deployment资源流程](#71-k8s创建deployment资源流程)
+  - [7.2. Deployment资源属性](#72-deployment资源属性)
+- [8. 参考资料](#8-参考资料)
+- [9. 问题](#9-问题)
 
 
 
@@ -126,25 +145,15 @@ conditions 字段描述了所有 Running 节点的状态。状况的示例包括
 * 信息
 > 关于节点的一般性信息，例如内核版本、Kubernetes 版本（kubelet 和 kube-proxy 版本）、 Docker 版本（如果使用了）和操作系统名称。这些信息由 kubelet 从节点上搜集而来。
 
-#### 节点控制器
+#### 2.1.1.3. 节点控制器
 > 同下文
 
-#### 心跳机制
-> Kubernetes 节点发送的心跳（Heartbeats）有助于确定节点的可用性。
+#### 2.1.1.4. 节点容量
+>Node 对象会跟踪节点上资源的容量（例如可用内存和 CPU 数量）。 通过自注册机制生成的 Node 对象会在注册期间报告自身容量。 如果你手动添加了 Node，你就需要在添加节点时 手动设置节点容量。
 
-心跳有两种形式:
-*  NodeStatus 
-*  the Lease object
-   *  Lease 是一种轻量级的资源，可在集群规模扩大时提高节点心跳机制的性能
+> Kubernetes 调度器保证节点上 有足够的资源供其上的所有 Pod 使用。它会检查节点上所有容器的请求的总和不会超过节点的容量。 总的请求包括由 kubelet 启动的所有容器，但不包括由容器运行时直接启动的容器， 也不包括不受 kubelet 控制的其他进程。
 
-**kubelet 负责创建和更新 NodeStatus 和 Lease 对象**
-*  NodeStatus 
-  * 当状态发生变化时，或者在配置的时间间隔内没有更新事件时，kubelet 会更新 NodeStatus。 
-  * NodeStatus 更新的默认间隔为 5 分钟（比不可达节点的 40 秒默认超时时间长很多）。
-* Lease object
-  * kubelet 会每 10 秒（默认更新间隔时间）创建并更新其 Lease 对象。 
-  * Lease 更新独立于 NodeStatus 更新而发生。 
-  * 如果 Lease 的更新操作失败，kubelet 会采用指数回退机制，从 200 毫秒开始 重试，最长重试间隔为 7 秒钟。
+#### 2.1.1.5. 节点拓扑
 
 ## 2.2. api server
 > apiserver 是 k8s 控制面板的组件之一， 该组件公开了 k8s API，是 k8s 控制面板的前端。（ kube-apiserver 是 k8s api server 的主要实现 ）
@@ -187,7 +196,13 @@ conditions 字段描述了所有 Running 节点的状态。状况的示例包括
   * :question: **端点控制器**（Endpoints Controller）: 填充端点(Endpoints)对象(即加入 Service 与 Pod)。
   * **服务帐户和令牌控制器**（Service Account & Token Controllers）: 为新的命名空间创建默认帐户和 API 访问令牌.
 
-### 2.5.1. 节点控制器
+### 2.5.1. workload resources
+* Deployment 和 ReplicaSet （替换原来的资源 ReplicationController）。 Deployment 很适合用来管理你的集群上的无状态应用，Deployment 中的所有 Pod 都是相互等价的，并且在需要的时候被换掉。
+* StatefulSet 让你能够运行一个或者多个以某种方式跟踪应用状态的 Pods。 例如，如果你的负载会将数据作持久存储，你可以运行一个 StatefulSet，将每个 Pod 与某个 PersistentVolume 对应起来。你在 StatefulSet 中各个 Pod 内运行的代码可以将数据复制到同一 StatefulSet 中的其它 Pod 中以提高整体的服务可靠性。
+* DaemonSet 定义提供节点本地支撑设施的 Pods。这些 Pods 可能对于你的集群的运维是 非常重要的，例如作为网络链接的辅助工具或者作为网络 插件 的一部分等等。每次你向集群中添加一个新节点时，如果该节点与某 DaemonSet 的规约匹配，则控制面会为该 DaemonSet 调度一个 Pod 到该新节点上运行。
+* Job 和 CronJob。 定义一些一直运行到结束并停止的任务。Job 用来表达的是一次性的任务，而 CronJob 会根据其时间规划反复运行。
+
+### 2.5.2. 节点控制器
 **节点控制器在节点的生命周期中扮演的角色：**
 * 当节点注册时并且启用了 CIDR 分配，为它分配一个 CIDR（Pod IP地址规划）区段。
 * 保持节点控制器内的节点列表与云服务商所提供的可用机器列表同步。
@@ -198,11 +213,29 @@ conditions 字段描述了所有 Running 节点的状态。状况的示例包括
   * 如果节点接下来持续处于不可达状态，节点控制器将逐出节点上的所有 Pod（使用体面终止）。
   * 默认情况下 40 秒后开始报告 "Unknown"，在那之后 5 分钟开始逐出 Pod。 节点控制器每隔 --node-monitor-period 秒检查每个节点的状态。
 
-### 2.5.2. 副本控制器
+#### 2.5.2.1. 心跳机制
+> Kubernetes 节点发送的心跳（Heartbeats）有助于确定节点的可用性。
+心跳有两种形式:
+*  NodeStatus 
+*  the Lease object
+   *  Lease 是一种轻量级的资源，可在集群规模扩大时提高节点心跳机制的性能
 
-### 2.5.3. 端点控制器
+**kubelet 负责创建和更新 NodeStatus 和 Lease 对象**
+*  NodeStatus 
+  * 当状态发生变化时，或者在配置的时间间隔内没有更新事件时，kubelet 会更新 NodeStatus。 
+  * NodeStatus 更新的默认间隔为 5 分钟（比不可达节点的 40 秒默认超时时间长很多）。
+* Lease object
+  * kubelet 会每 10 秒（默认更新间隔时间）创建并更新其 Lease 对象。 
+  * Lease 更新独立于 NodeStatus 更新而发生。 
+  * 如果 Lease 的更新操作失败，kubelet 会采用指数回退机制，从 200 毫秒开始 重试，最长重试间隔为 7 秒钟。
 
-### 2.5.4. 服务帐户和令牌控制器
+#### 2.5.2.2. 可靠性
+
+### 2.5.3. 副本控制器
+
+### 2.5.4. 端点控制器
+
+### 2.5.5. 服务帐户和令牌控制器
 
 
 ## 2.6. cloud-controller-manager
@@ -400,13 +433,89 @@ kubectl get pods --field-selector status.phase=Running
 ### 4.1.3. 调度算法
 
 
+# 5. 通信
+## 5.1. 控制面板（Master） -> 节点（Node）
+> 从控制面（apiserver）到节点有两种主要的通信路径
+### 5.1.1. apiserver -> Node
+* `apiserver` 到集群中每个节点上运行的 `kubelet` 
+  * 获取 Pod 日志
+  * 挂接（通过 kubectl）到运行中的 Pod
+  * 提供 kubelet 的端口转发功能。
+  * 注意：默认情况下，apiserver 不检查 kubelet 的服务证书
+* apiserver 通过它的代理功能连接到任何节点、Pod 或者服务
+  * 从 apiserver 到节点、Pod 或服务的连接默认为纯 HTTP 方式
+  * 可通过给 API URL 中的节点、Pod 或服务名称添加前缀 https: 来运行在安全的 HTTPS 连接上
 
-# 5. 参考资料
+### 5.1.2. SSH 隧道
+> Kubernetes 支持使用 SSH 隧道来保护从控制面到节点的通信路径。在这种配置下，apiserver 建立一个到集群中各节点的 SSH 隧道（连接到在 22 端口监听的 SSH 服务） 并通过这个隧道传输所有到 kubelet、节点、Pod 或服务的请求。 这一隧道保证通信不会被暴露到集群节点所运行的网络之外。
+> 
+> SSH 隧道目前已被废弃。除非你了解个中细节，否则不应使用。 Konnectivity 服务是对此通信通道的替代品。
+
+### 5.1.3. Konnectivity 服务
+> 作为 SSH 隧道的替代方案，Konnectivity 服务提供 TCP 层的代理，以便支持从控制面到集群的通信。 
+
+> Konnectivity 服务包含两个部分：
+* Konnectivity 服务器和 Konnectivity 代理，分别运行在 控制面网络和节点网络中。
+* Konnectivity 代理建立并维持到 Konnectivity 服务器的网络连接。 启用 Konnectivity 服务之后，所有控制面到节点的通信都通过这些连接传输
+
+
+# 6. 网络
+Kubernetes 网络解决四方面的问题：
+* 一个 Pod 中的容器之间通过本地回路（loopback）通信。
+* 集群网络在不同 pod 之间提供通信。
+* Service 资源允许你对外暴露 Pods 中运行的应用程序，以支持来自于集群外部的访问。
+* 可以使用 Services 来发布仅供集群内部使用的服务。
+
+## 6.1. 虚拟 IP 和 Service 代理
+
+### 6.1.1. userspace 代理模式
+![userspace-prox](./img/services-userspace-overview.svg)
+
+### 6.1.2. iptables 代理模式
+![iptables](./img/services-iptables-overview.svg)
+
+### 6.1.3. IPVS 代理模式
+![ipvs](./img/services-ipvs-overview.svg)
+
+### 虚拟IP
+> Kubernetes集群里有三种IP地址，分别如下：
+* Node IP：Node节点的IP地址，即物理网卡的IP地址。
+* Pod IP：Pod的IP地址，即docker容器的IP地址，此为虚拟IP地址。
+* Cluster IP：Service的IP地址，此为虚拟IP地址。
+
+
+# 服务发现
+
+> Kubernetes 支持两种基本的服务发现模式 —— 环境变量和 DNS。
+
+* 环境变量
+
+* DNS
+# 7. Deployment
+> Deployment是一个定义及管理多副本应用（即多个副本 Pod）的新一代对象，与Replication Controller相比，它提供了更加完善的功能，使用起来更加简单方便。
+
+## 7.1. K8S创建Deployment资源流程
+* 用户通过 kubectl 创建 Deployment。
+* *Deployment 创建 ReplicaSet。
+* *ReplicaSet 创建 Pod。
+
+## 7.2. Deployment资源属性
+* apiVersion
+> 注意这里apiVersion对应的值是apps/v1
+> 
+> 这个版本号需要根据安装的Kubernetes版本和资源类型进行变化，记住不是写死的。此值必须在kubectl apiversion中
+* kind：资源类型， 这里指定为Deployment
+* 
+
+**参考资料**
+[Deployment资源详解](https://zhuanlan.zhihu.com/p/126292353)
+[怎么写 k8s 容器编排控制器 Deployment?](https://zhuanlan.zhihu.com/p/203679568)
+# 8. 参考资料
 * [Kubernetes 文档](https://kubernetes.io/docs/home/)
 * [Kubernetes 中文文档](https://kubernetes.io/zh/docs/home/)
 
 
-# 6. 问题
+# 9. 问题
 * namespace 的作用？使用中注意事项？
 
 
