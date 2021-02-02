@@ -62,6 +62,7 @@
 - [7. Deployment](#7-deployment)
   - [7.1. K8S创建Deployment资源流程](#71-k8s创建deployment资源流程)
   - [7.2. Deployment资源属性](#72-deployment资源属性)
+- [Kubernetes 代理](#kubernetes-代理)
 - [8. 参考资料](#8-参考资料)
 - [9. 问题](#9-问题)
 
@@ -485,19 +486,19 @@ Kubernetes 网络解决四方面的问题：
 
 
 # 服务发现
-
 > Kubernetes 支持两种基本的服务发现模式 —— 环境变量和 DNS。
 
 * 环境变量
-
 * DNS
+
+
 # 7. Deployment
 > Deployment是一个定义及管理多副本应用（即多个副本 Pod）的新一代对象，与Replication Controller相比，它提供了更加完善的功能，使用起来更加简单方便。
 
 ## 7.1. K8S创建Deployment资源流程
 * 用户通过 kubectl 创建 Deployment。
-* *Deployment 创建 ReplicaSet。
-* *ReplicaSet 创建 Pod。
+* Deployment 创建 ReplicaSet。
+* ReplicaSet 创建 Pod。
 
 ## 7.2. Deployment资源属性
 * apiVersion
@@ -505,7 +506,49 @@ Kubernetes 网络解决四方面的问题：
 > 
 > 这个版本号需要根据安装的Kubernetes版本和资源类型进行变化，记住不是写死的。此值必须在kubectl apiversion中
 * kind：资源类型， 这里指定为Deployment
-* 
+  
+# Kubernetes 代理
+用户在使用 Kubernetes 的过程中可能遇到几种不同的代理（proxy）：
+
+1. kubectl proxy：
+     * 运行在用户的桌面或 pod 中
+     * 从本机地址到 Kubernetes apiserver 的代理
+     * 客户端到代理使用 HTTP 协议
+     * 代理到 apiserver 使用 HTTPS 协议
+     * 指向 apiserver
+     * 添加认证头信息
+
+2. apiserver proxy：
+     * 是一个建立在 apiserver 内部的`堡垒`
+     * 将集群外部的用户与群集 IP 相连接，这些IP是无法通过其他方式访问的
+     * 运行在 apiserver 进程内
+     * 客户端到代理使用 HTTPS 协议 (如果配置 apiserver 使用 HTTP 协议，则使用 HTTP 协议)
+     * 通过可用信息进行选择，代理到目的地可能使用 HTTP 或 HTTPS 协议
+     * 可以用来访问 Node、 Pod 或 Service
+     * 当用来访问 Service 时，会进行负载均衡
+
+3. kube proxy：
+    * 在每个节点上运行
+    * 代理 UDP、TCP 和 SCTP
+    * 不支持 HTTP
+    * 提供负载均衡能力
+    * 只用来访问 Service
+
+4. apiserver 之前的代理/负载均衡器
+     * 在不同集群中的存在形式和实现不同 (如 nginx)
+     * 位于所有客户端和一个或多个 API 服务器之间
+     * 存在多个 API 服务器时，扮演负载均衡器的角色
+
+
+5. 外部服务的云负载均衡器
+    * 由一些云供应商提供 (如 AWS ELB、Google Cloud Load Balancer)
+    * Kubernetes 服务类型为 LoadBalancer 时自动创建
+    * 通常仅支持 UDP/TCP 协议
+    * SCTP 支持取决于云供应商的负载均衡器实现
+    * 不同云供应商的云负载均衡器实现不同
+
+
+
 
 **参考资料**
 [Deployment资源详解](https://zhuanlan.zhihu.com/p/126292353)

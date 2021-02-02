@@ -47,9 +47,16 @@
       2. 物理隔离
    2. pod/service 与 service
    3. pod 与外部网络
+      1. NodePort
+      2. LoaderBalance
+      3. Ingress
    4. 如何同步pod网络变化？ 
       * api server 、kube-proxy、etcd、netfilter
 
-3. 存储
-4. 组件的容错和恢复机制
-5. k8s ipvs、istio从理论到生产落地
+
+问题：
+1. pod 与 pod 描述不清
+   1. 网桥是什么？ eth0 是什么？如何寻找的过程
+2. iptable 和 ipvs 的区别
+3. netfilter 到底有什么作用？
+4. pod 与外部网络 具体流程 ？实现原理？优点与缺点？
