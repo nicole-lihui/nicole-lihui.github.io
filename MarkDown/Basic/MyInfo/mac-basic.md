@@ -35,10 +35,8 @@ $ mkdir ~/vms/vagrant-centos-7
 $ cd ~/vms/vagrant-centos-7
 # load a Vagrant box that you want to use. As an example, we’ll load a CentOS 7 file: （need choose options, use virtualbox ）
 $ vagrant box add centos/7
-
-
-# create a simple Vagrantfile. This is a text file with instructions for Vagrant to build out the virtual machine you want. Enter the command:
-$ touch Vagrantfile
+# make a vagrant file in current directory. if vagrant box image hasn`t been downloaded before. then it try to download the vagrant box image.
+$ vagrant init centos/7
 
 # You can then launch the CentOS 7 virtual machine by entering:
 # vm start

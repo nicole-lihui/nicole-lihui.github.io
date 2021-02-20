@@ -17,8 +17,28 @@ $ cat ~/.zshrc
 export GOPATH=~/go
 export GO111MODULE=on
 export GOBIN=$GOPATH/bin
-export $PATH:$GOROOT/bin
 export GOPROXY=https://goproxy.cn,direct
+```
+
+```bash
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.io,direct
+
+
+go get -v -u github.com/ramya-rao-a/go-outline
+go get -v -u github.com/acroca/go-symbols
+go get -v -u github.com/mdempsky/gocode
+go get -v -u github.com/rogpeppe/godef
+go get -v -u github.com/zmb3/gogetdoc
+go get -v -u github.com/fatih/gomodifytags
+go get -v -u sourcegraph.com/sqs/goreturns
+go get -v -u github.com/cweill/gotests/...
+go get -v -u github.com/josharian/impl
+go get -v -u github.com/haya14busa/goplay/cmd/goplay
+go get -v -u github.com/uudashr/gopkgs/cmd/gopkgs
+go get -v -u github.com/davidrjenni/reftools/cmd/fillstruct
+go get -v -u github.com/alecthomas/gometalinter
+
 ```
 
 ## go mirco
