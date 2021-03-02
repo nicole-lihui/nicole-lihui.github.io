@@ -143,7 +143,9 @@ kubeadm init
 # 如果是国内，最好指定 镜像仓库
 kubeadm init --image-repository registry.aliyuncs.com/google_containers
 ```
+
 > kubeadm init 结果如下：
+
 ```BASH
 # etc...
 [addons] Applied essential addon: CoreDNS
@@ -173,6 +175,7 @@ kubeadm join 10.31.203.1:6443 --token ni3wg5.1u8p0zbwap7pyjwp \
 
 #### Step 5: To use root, run:
 Having initialized Kubernetes successfully, you will need to allow your user to start using the cluster. In our case, we want to run this installation as root user, therefore we will go ahead and run these commands as root. You can change to a sudo enabled user you prefer and run the below using sudo.
+
 ```BASH
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -188,6 +191,8 @@ kubectl get nodes
 >此时，您还将注意到主节点的状态为NotReady。这是因为我们还没有将pod网络部署到集群中。
 
 >pod网络是集群的覆盖网络，部署在现有节点网络的顶部。它的设计目的是允许跨吊舱的连接。
+
+
 ```BASH
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
@@ -270,7 +275,10 @@ systemctl start kubelet
 # We now require the token that kubeadm init generated, to join the cluster. You can copy and paste it to your node-1 and node-2 if you had copied it somewhere.
 kubeadm join 10.31.203.1:6443 --token ni3wg5.1u8p0zbwap7pyjwp --discovery-token-ca-cert-hash sha256:e4a22699640580b5a007b1b7934516351b12173c38db403af56375ba02add47b 
 ```
+
 > 在 master node 上检测 work node 是否连接
+
+
 ```BASH
 # kubectl get nodes
 NAME          STATUS   ROLES                  AGE     VERSION
