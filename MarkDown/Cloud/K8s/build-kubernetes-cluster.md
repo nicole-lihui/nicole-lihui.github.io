@@ -10,12 +10,18 @@
       - [Step 4: Initialize Kubernetes Master and Setup Default User](#step-4-initialize-kubernetes-master-and-setup-default-user)
       - [Step 5: To use root, run:](#step-5-to-use-root-run)
       - [Step 6: Setup Your Pod Network](#step-6-setup-your-pod-network)
+      - [Step 7: Check Status of Cluster](#step-7-check-status-of-cluster)
     - [Setting Up Worker Nodes to Join Kubernetes Cluster](#setting-up-worker-nodes-to-join-kubernetes-cluster)
       - [Step 1: Prepare Hostname, Firewall and SELinux](#step-1-prepare-hostname-firewall-and-selinux-1)
       - [Setup the Kubernetes Repo](#setup-the-kubernetes-repo)
       - [Step 3: Install Kubeadm and Docker](#step-3-install-kubeadm-and-docker-1)
       - [Step 4: Join the Worker Node to the Kubernetes Cluster](#step-4-join-the-worker-node-to-the-kubernetes-cluster)
     - [参考资料](#参考资料)
+- [重新初始化 Kubernetes Cluster](#重新初始化-kubernetes-cluster)
+  - [Master Node 移除所有工作节点](#master-node-移除所有工作节点)
+  - [Worker Node 删除工作目录，并重置kubeadm](#worker-node-删除工作目录并重置kubeadm)
+  - [Master Node 删除工作目录，并重置kubeadm](#master-node-删除工作目录并重置kubeadm)
+  - [Kubeadm init](#kubeadm-init)
 
 # 搭建 Kubernetes Cluster On CentOS 7
 
@@ -33,7 +39,8 @@
 |host 2 |CentOS 7  |16G |8 |128G |
 
 ## 搭建步骤
-> 为了使用 Kubernetes，我们需要安装一个 容器化引擎。现在主流的容器就是 Docker。在 Master Node 和 Worker Node 上，我们都需要安装 Docker。
+* 为了使用 Kubernetes，我们需要安装一个 容器化引擎。现在主流的容器就是 Docker。
+* 在 Master Node 和 Worker Node 上，我们都需要安装 Docker。
 
 ### Installation of Kubernetes Cluster on Master-Node
 #### Step 1: Prepare Hostname, Firewall and SELinux
@@ -55,14 +62,10 @@ sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig
 
 reboot
 
-# Set the following firewall rules on ports. Make sure that each firewall-cmd command, returns a success.
-firewall-cmd --permanent --add-port=6443/tcp
-firewall-cmd --permanent --add-port=2379-2380/tcp
-firewall-cmd --permanent --add-port=10250/tcp
-firewall-cmd --permanent --add-port=10251/tcp
-firewall-cmd --permanent --add-port=10252/tcp
-firewall-cmd --permanent --add-port=10255/tcp
-firewall-cmd --reload
+# disable firewald
+systemctl stop firewalld
+systemctl status firewalld
+
 
 # modprobe
 # 用于向内核中加载模块或者从内核中移除模块。
@@ -144,7 +147,7 @@ kubeadm init
 kubeadm init --image-repository registry.aliyuncs.com/google_containers
 ```
 
-> kubeadm init 结果如下：
+**kubeadm init 结果如下：**
 
 ```BASH
 # etc...
@@ -178,28 +181,41 @@ Having initialized Kubernetes successfully, you will need to allow your user to 
 
 ```BASH
 mkdir -p $HOME/.kube
-cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-chown $(id -u):$(id -g) $HOME/.kube/config
-
-service kubelet restart
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Now check to see if the kubectl command is activated.
 kubectl get nodes
 ```
 
 #### Step 6: Setup Your Pod Network
->此时，您还将注意到主节点的状态为NotReady。这是因为我们还没有将pod网络部署到集群中。
+* 此时，您还将注意到主节点的状态为NotReady。这是因为我们还没有将pod网络部署到集群中。
+* pod网络是集群的覆盖网络，部署在现有节点网络的顶部。它的设计目的是允许跨吊舱的连接。
+* 常用的CNI 是 weave 、 calico、 fannal，大家可以自由选择一种，推荐 calico, 更多可以[查看官方网络插件](https://kubernetes.io/docs/concepts/cluster-administration/addons/)
 
->pod网络是集群的覆盖网络，部署在现有节点网络的顶部。它的设计目的是允许跨吊舱的连接。
+**calico 启用**
+```BASH
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+```
 
-
+**weave 启用**
 ```BASH
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+```
 
-# Now if you check the status of your master-node, it should be ‘Ready’.
+**fannal 启用**
+```BASH
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+```
+
+#### Step 7: Check Status of Cluster
+```BASH
+# Check the status of the nodes by entering the following command on the master server:
 kubectl get nodes
 
+# Once a pod network has been installed, you can confirm that it is working by checking that the CoreDNS pod is running by typing:
+kubectl get pods --all-namespaces
 ```
 
 ### Setting Up Worker Nodes to Join Kubernetes Cluster
@@ -221,13 +237,9 @@ setenforce 0
 
 sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
-# Set the following firewall rules on ports. Make sure that all firewall-cmd commands, return success.
-firewall-cmd --permanent --add-port=6783/tcp
-firewall-cmd --permanent --add-port=10250/tcp
-firewall-cmd --permanent --add-port=10255/tcp
-firewall-cmd --permanent --add-port=30000-32767/tcp
-firewall-cmd --reload
-
+# disable firewald
+systemctl stop firewalld
+systemctl status firewalld
 
 modprobe br_netfilter
 echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
@@ -291,3 +303,29 @@ node-1        Ready    <none>                 7m53s   v1.20.4
 * [Kubernetes(K8s) 安装（使用kubeadm安装Kubernetes集群）](https://www.cnblogs.com/zhizihuakai/p/12629514.html)
 * [How to Install a Kubernetes Cluster on CentOS 7](https://www.tecmint.com/install-kubernetes-cluster-on-centos-7/)
 * [手把手从零搭建与运营生产级的 Kubernetes 集群与 KubeSphere](https://www.kubernetes.org.cn/7315.html)
+
+# 重新初始化 Kubernetes Cluster
+
+## Master Node 移除所有工作节点
+```BASH
+kubectl get nodes
+kubectl delete node node-1
+kubectl delete node node-2
+```
+
+## Worker Node 删除工作目录，并重置kubeadm
+```BASH
+rm -rf /etc/kubernetes/*
+kubeadm reset
+```
+
+## Master Node 删除工作目录，并重置kubeadm
+```BASH
+rm -rf /etc/kubernetes/*
+rm -rf ~/.kube/*
+rm -rf /var/lib/etcd/*
+kubeadm reset -f
+```
+
+## Kubeadm init
+> 重复 kubeadm init，并且重复 部署Kubernetes cluster 操作
