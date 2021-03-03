@@ -144,7 +144,7 @@ swapoff -a
 kubeadm init
 
 # 如果是国内，最好指定 镜像仓库
-kubeadm init --image-repository registry.aliyuncs.com/google_containers
+kubeadm init --image-repository=registry.aliyuncs.com/google_containers --pod-network-cidr=192.168.0.0/16 
 ```
 
 **kubeadm init 结果如下：**
