@@ -14,6 +14,7 @@
 ### 创建集群
 * cluster1 1个主节点，1个工作节点
 * cluster2 1个主节点，2个工作节点
+
 ```bash
 # create cluster1
 cat <<EOF >  cluster1.yaml
@@ -189,7 +190,8 @@ EOF
 ```
 这里按照官方进行对不同上下文，应用命名空间。
 
-疑问:question: 上下文可以共用一个 cluster 的时候，命名空间应该是唯一的，下面操作存在无意义行为
+疑问: 上下文可以共用一个 cluster 的时候，命名空间应该是唯一的，下面操作存在无意义行为
+
 ```bash
 kubectl config use-context kind-cluster1
 for CTX in "$CTX_PRIMARY" "$CTX_R1_Z1" "$CTX_R1_Z2"; \
@@ -284,4 +286,4 @@ kubectl exec --context="${CTX_R1_Z1}" -n sample -c sleep \
   -- curl -sSL helloworld.sample:5000/hello
 ```
 
-问题:question:：负载均衡只实现了 `region1.zone1` 和 `region1.zone2` 的流量控制，都是 `cluster1`。`cluster2` 的 `region3.zone4` 没有被调用
+问题：负载均衡只实现了 `region1.zone1` 和 `region1.zone2` 的流量控制，都是 `cluster1`。`cluster2` 的 `region3.zone4` 没有被调用
