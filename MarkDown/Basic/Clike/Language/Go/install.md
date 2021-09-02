@@ -1,6 +1,8 @@
 # GO + GO Micro
 
 ## install go
+
+### case 1
 > brew 需要换成国内的源，速度快，后期常用。
 
 ```bash
@@ -15,8 +17,14 @@ export GO111MODULE=on
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN:$GOROOT/bin
 export GOPROXY=https://goproxy.cn
+```
+
+### case 2
+```bash
 
 ```
+
+
 
 ## go mirco
 

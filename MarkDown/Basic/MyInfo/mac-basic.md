@@ -1,9 +1,16 @@
 # Mac
 
-## install brew 
+## brew 
 ```bash
+# install
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# uninstall 
+sudo ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 ```
+
+### 参考
+[What is the best/safest way to reinstall Homebrew?](https://stackoverflow.com/questions/11038028/what-is-the-best-safest-way-to-reinstall-homebrew)
 
 ### Mac opne option of install anywhere<span id="1"></span>
 >commond:
@@ -48,8 +55,19 @@ $ vagrant ssh
 # To stop your virtual machine use the command:
 $ vagrant halt
 
+```
 
+## 常用软件
+```bash
+$ brew ls
+==> Formulae
+ansible		gettext		helm		libevent	mosquitto	pkg-config	sqlite		xz
+deno		git		ios-deploy	libuv		openjdk@11	python@3.8	tree
+fzf		gnu-sed		kubebuilder	libwebsockets	openssl@1.1	qt		unrar
+gdbm		go		kubernetes-cli	libyaml		pcre2		readline	wrk
 
-
-
+==> Casks
+anaconda		iterm2			vagrant			visual-studio-code
+docker			java11			vagrant-manager		vmware-fusion
+hbuilder		powershell		virtualbox
 ```
