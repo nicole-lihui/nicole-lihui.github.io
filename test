@@ -1,0 +1,518 @@
+package istioagent
+
+import (
+	"fmt"
+	google_rpc "google.golang.org/genproto/googleapis/rpc/status"
+	"istio.io/istio/pilot/pkg/model/status"
+	"istio.io/istio/pilot/test/xdstest"
+	"istio.io/istio/pkg/test/util/retry"
+	"testing"
+	"time"
+
+	core "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
+	discovery "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v3"
+	"google.golang.org/grpc"
+
+	networking "istio.io/api/networking/v1alpha3"
+	"istio.io/istio/pilot/pkg/model"
+	"istio.io/istio/pilot/pkg/xds"
+	v3 "istio.io/istio/pilot/pkg/xds/v3"
+	"istio.io/istio/pkg/config"
+	"istio.io/istio/pkg/config/schema/gvk"
+)
+
+
+// TestXdsLeak is a regression test for https://github.com/istio/istio/issues/34097
+func TestDeltaXdsLeak(t *testing.T) {
+	proxy := setupXdsProxyWithDownstreamOptions(t, []grpc.ServerOption{grpc.StreamInterceptor(xdstest.SlowServerInterceptor(time.Second, time.Second))})
+	f := xdstest.NewMockServer(t)
+	setDialOptions(proxy, f.Listener)
+	proxy.istiodDialOptions = append(proxy.istiodDialOptions, grpc.WithStreamInterceptor(xdstest.SlowClientInterceptor(0, time.Second*10)))
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+	sendDeltaDownstreamWithoutResponse(t, downstream)
+	for i := 0; i < 15; i++ {
+		// Send a bunch of responses from Istiod. These should not block, even though there are more sends than responseChan can hold
+		f.SendDeltaResponse(&discovery.DeltaDiscoveryResponse{TypeUrl: v3.ClusterType})
+	}
+	// Exit test, closing the connections. We should not have any goroutine leaks (checked by leak.CheckMain)
+}
+
+// sendDownstreamWithoutResponse sends a response without waiting for a response
+func sendDeltaDownstreamWithoutResponse(t *testing.T, downstream discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient) {
+	t.Helper()
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{
+		TypeUrl: v3.ClusterType,
+		Node: &core.Node{
+			Id: "sidecar~0.0.0.0~debug~cluster.local",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+// Validates basic xds proxy flow by proxying one CDS requests end to end.
+func TestDeltaXdsProxyBasicFlow(t *testing.T) {
+	proxy := setupXdsProxy(t)
+	f := xds.NewFakeDiscoveryServer(t, xds.FakeOptions{})
+	setDialOptions(proxy, f.BufListener)
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, model.NodeMetadata{
+		Namespace:   "default",
+		InstanceIPs: []string{"1.1.1.1"},
+	})
+}
+
+
+
+func TestXdsProxyDeltaHealthCheck (t *testing.T) {
+	healthy := &discovery.DeltaDiscoveryRequest{TypeUrl: v3.HealthInfoType}
+	unhealthy := &discovery.DeltaDiscoveryRequest{
+		TypeUrl: v3.HealthInfoType,
+		ErrorDetail: & google_rpc.Status{
+			Code:    500,
+			Message: "unhealthy",
+		},
+	}
+	node := model.NodeMetadata{
+		AutoRegisterGroup: "group",
+		Namespace:         "default",
+		InstanceIPs:       []string{"1.1.1.1"},
+	}
+	proxy := setupXdsProxy(t)
+
+	f := xds.NewFakeDiscoveryServer(t, xds.FakeOptions{})
+	if _, err := f.Store().Create(config.Config{
+		Meta: config.Meta{
+			Name:             "group",
+			Namespace:        "default",
+			GroupVersionKind: gvk.WorkloadGroup,
+		},
+		Spec: &networking.WorkloadGroup{
+			Template: &networking.WorkloadEntry{},
+		},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	setDialOptions(proxy, f.BufListener)
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+
+	// Setup test helpers
+	waitDisconnect := func() {
+		retry.UntilSuccessOrFail(t, func() error {
+			proxy.connectedMutex.Lock()
+			defer proxy.connectedMutex.Unlock()
+			if proxy.connected != nil {
+				return fmt.Errorf("still connected")
+			}
+			return nil
+		}, retry.Timeout(time.Second), retry.Delay(time.Millisecond))
+	}
+	expectCondition := func(expected string) {
+		t.Helper()
+		retry.UntilSuccessOrFail(t, func() error {
+			cfg := f.Store().Get(gvk.WorkloadEntry, "group-1.1.1.1", "default")
+			if cfg == nil {
+				return fmt.Errorf("config not found")
+			}
+			con := status.GetConditionFromSpec(*cfg, status.ConditionHealthy)
+			if con == nil {
+				if expected == "" {
+					return nil
+				}
+				return fmt.Errorf("found no conditions, expected %v", expected)
+			}
+			if con.Status != expected {
+				return fmt.Errorf("expected status %q got %q", expected, con.Status)
+			}
+			return nil
+		}, retry.Timeout(time.Second*2))
+	}
+
+	// send cds before healthcheck, to make wle registered
+	coreNode := &core.Node{
+		Id:       "sidecar~1.1.1.1~debug~cluster.local",
+		Metadata: node.ToStruct(),
+	}
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ClusterType, Node: coreNode})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// healthcheck before lds will be not sent
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition("")
+
+	// simulate envoy send xds requests
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// after lds sent, the caching healthcheck will be resent
+	expectCondition(status.StatusTrue)
+
+	// Flip status back and forth, ensure we update
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+
+	// Completely disconnect
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// Old status should remain
+	expectCondition(status.StatusTrue)
+	// And still update when we send new requests
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+
+	// Send a new update while we are disconnected
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	proxy.PersistDeltaRequest(healthy)
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// When we reconnect, our status update should still persist
+	expectCondition(status.StatusTrue)
+
+	// Confirm more updates are honored
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+
+	// Disconnect and remove workload entry. This could happen if there is an outage and istiod cleans up
+	// the workload entry.
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	f.Store().Delete(gvk.WorkloadEntry, "group-1.1.1.1", "default", nil)
+	proxy.PersistDeltaRequest(healthy)
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// When we reconnect, our status update should be re-applied
+	expectCondition(status.StatusTrue)
+
+	// Confirm more updates are honored
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+}
+
+func deltaStream(t *testing.T, conn *grpc.ClientConn) discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient {
+	t.Helper()
+	adsClient := discovery.NewAggregatedDiscoveryServiceClient(conn)
+	downstream, err := adsClient.DeltaAggregatedResources(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return downstream
+}
+
+func sendDeltaDownstreamWithNode(t *testing.T, downstream discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient, meta model.NodeMetadata) {
+	t.Helper()
+	node := &core.Node{
+		Id:       "sidecar~1.1.1.1~debug~cluster.local",
+		Metadata: meta.ToStruct(),
+	}
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ClusterType, Node: node})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res == nil || res.TypeUrl != v3.ClusterType {
+		t.Fatalf("Expected to get cluster response but got %v", res)
+	}
+	err = downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ListenerType, Node: node})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err = downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res == nil || res.TypeUrl != v3.ListenerType {
+		t.Fatalf("Expected to get listener response but got %v", res)
+	}
+}
+
+package istioagent
+
+import (
+	"fmt"
+	google_rpc "google.golang.org/genproto/googleapis/rpc/status"
+	"istio.io/istio/pilot/pkg/model/status"
+	"istio.io/istio/pilot/test/xdstest"
+	"istio.io/istio/pkg/test/util/retry"
+	"testing"
+	"time"
+
+	core "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
+	discovery "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v3"
+	"google.golang.org/grpc"
+
+	networking "istio.io/api/networking/v1alpha3"
+	"istio.io/istio/pilot/pkg/model"
+	"istio.io/istio/pilot/pkg/xds"
+	v3 "istio.io/istio/pilot/pkg/xds/v3"
+	"istio.io/istio/pkg/config"
+	"istio.io/istio/pkg/config/schema/gvk"
+)
+
+
+// TestXdsLeak is a regression test for https://github.com/istio/istio/issues/34097
+func TestDeltaXdsLeak(t *testing.T) {
+	proxy := setupXdsProxyWithDownstreamOptions(t, []grpc.ServerOption{grpc.StreamInterceptor(xdstest.SlowServerInterceptor(time.Second, time.Second))})
+	f := xdstest.NewMockServer(t)
+	setDialOptions(proxy, f.Listener)
+	proxy.istiodDialOptions = append(proxy.istiodDialOptions, grpc.WithStreamInterceptor(xdstest.SlowClientInterceptor(0, time.Second*10)))
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+	sendDeltaDownstreamWithoutResponse(t, downstream)
+	for i := 0; i < 15; i++ {
+		// Send a bunch of responses from Istiod. These should not block, even though there are more sends than responseChan can hold
+		f.SendDeltaResponse(&discovery.DeltaDiscoveryResponse{TypeUrl: v3.ClusterType})
+	}
+	// Exit test, closing the connections. We should not have any goroutine leaks (checked by leak.CheckMain)
+}
+
+// sendDownstreamWithoutResponse sends a response without waiting for a response
+func sendDeltaDownstreamWithoutResponse(t *testing.T, downstream discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient) {
+	t.Helper()
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{
+		TypeUrl: v3.ClusterType,
+		Node: &core.Node{
+			Id: "sidecar~0.0.0.0~debug~cluster.local",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+// Validates basic xds proxy flow by proxying one CDS requests end to end.
+func TestDeltaXdsProxyBasicFlow(t *testing.T) {
+	proxy := setupXdsProxy(t)
+	f := xds.NewFakeDiscoveryServer(t, xds.FakeOptions{})
+	setDialOptions(proxy, f.BufListener)
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, model.NodeMetadata{
+		Namespace:   "default",
+		InstanceIPs: []string{"1.1.1.1"},
+	})
+}
+
+
+
+func TestXdsProxyDeltaHealthCheck (t *testing.T) {
+	healthy := &discovery.DeltaDiscoveryRequest{TypeUrl: v3.HealthInfoType}
+	unhealthy := &discovery.DeltaDiscoveryRequest{
+		TypeUrl: v3.HealthInfoType,
+		ErrorDetail: & google_rpc.Status{
+			Code:    500,
+			Message: "unhealthy",
+		},
+	}
+	node := model.NodeMetadata{
+		AutoRegisterGroup: "group",
+		Namespace:         "default",
+		InstanceIPs:       []string{"1.1.1.1"},
+	}
+	proxy := setupXdsProxy(t)
+
+	f := xds.NewFakeDiscoveryServer(t, xds.FakeOptions{})
+	if _, err := f.Store().Create(config.Config{
+		Meta: config.Meta{
+			Name:             "group",
+			Namespace:        "default",
+			GroupVersionKind: gvk.WorkloadGroup,
+		},
+		Spec: &networking.WorkloadGroup{
+			Template: &networking.WorkloadEntry{},
+		},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	setDialOptions(proxy, f.BufListener)
+	conn := setupDownstreamConnection(t, proxy)
+	downstream := deltaStream(t, conn)
+
+	// Setup test helpers
+	waitDisconnect := func() {
+		retry.UntilSuccessOrFail(t, func() error {
+			proxy.connectedMutex.Lock()
+			defer proxy.connectedMutex.Unlock()
+			if proxy.connected != nil {
+				return fmt.Errorf("still connected")
+			}
+			return nil
+		}, retry.Timeout(time.Second), retry.Delay(time.Millisecond))
+	}
+	expectCondition := func(expected string) {
+		t.Helper()
+		retry.UntilSuccessOrFail(t, func() error {
+			cfg := f.Store().Get(gvk.WorkloadEntry, "group-1.1.1.1", "default")
+			if cfg == nil {
+				return fmt.Errorf("config not found")
+			}
+			con := status.GetConditionFromSpec(*cfg, status.ConditionHealthy)
+			if con == nil {
+				if expected == "" {
+					return nil
+				}
+				return fmt.Errorf("found no conditions, expected %v", expected)
+			}
+			if con.Status != expected {
+				return fmt.Errorf("expected status %q got %q", expected, con.Status)
+			}
+			return nil
+		}, retry.Timeout(time.Second*2))
+	}
+
+	// send cds before healthcheck, to make wle registered
+	coreNode := &core.Node{
+		Id:       "sidecar~1.1.1.1~debug~cluster.local",
+		Metadata: node.ToStruct(),
+	}
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ClusterType, Node: coreNode})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// healthcheck before lds will be not sent
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition("")
+
+	// simulate envoy send xds requests
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// after lds sent, the caching healthcheck will be resent
+	expectCondition(status.StatusTrue)
+
+	// Flip status back and forth, ensure we update
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+
+	// Completely disconnect
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// Old status should remain
+	expectCondition(status.StatusTrue)
+	// And still update when we send new requests
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+
+	// Send a new update while we are disconnected
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	proxy.PersistDeltaRequest(healthy)
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// When we reconnect, our status update should still persist
+	expectCondition(status.StatusTrue)
+
+	// Confirm more updates are honored
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+
+	// Disconnect and remove workload entry. This could happen if there is an outage and istiod cleans up
+	// the workload entry.
+	conn.Close()
+	downstream.CloseSend()
+	waitDisconnect()
+	f.Store().Delete(gvk.WorkloadEntry, "group-1.1.1.1", "default", nil)
+	proxy.PersistDeltaRequest(healthy)
+	conn = setupDownstreamConnection(t, proxy)
+	downstream = deltaStream(t, conn)
+	sendDeltaDownstreamWithNode(t, downstream, node)
+
+	// When we reconnect, our status update should be re-applied
+	expectCondition(status.StatusTrue)
+
+	// Confirm more updates are honored
+	proxy.PersistDeltaRequest(unhealthy)
+	expectCondition(status.StatusFalse)
+	proxy.PersistDeltaRequest(healthy)
+	expectCondition(status.StatusTrue)
+}
+
+func deltaStream(t *testing.T, conn *grpc.ClientConn) discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient {
+	t.Helper()
+	adsClient := discovery.NewAggregatedDiscoveryServiceClient(conn)
+	downstream, err := adsClient.DeltaAggregatedResources(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return downstream
+}
+
+func sendDeltaDownstreamWithNode(t *testing.T, downstream discovery.AggregatedDiscoveryService_DeltaAggregatedResourcesClient, meta model.NodeMetadata) {
+	t.Helper()
+	node := &core.Node{
+		Id:       "sidecar~1.1.1.1~debug~cluster.local",
+		Metadata: meta.ToStruct(),
+	}
+	err := downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ClusterType, Node: node})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res == nil || res.TypeUrl != v3.ClusterType {
+		t.Fatalf("Expected to get cluster response but got %v", res)
+	}
+	err = downstream.Send(&discovery.DeltaDiscoveryRequest{TypeUrl: v3.ListenerType, Node: node})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err = downstream.Recv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res == nil || res.TypeUrl != v3.ListenerType {
+		t.Fatalf("Expected to get listener response but got %v", res)
+	}
+}
+

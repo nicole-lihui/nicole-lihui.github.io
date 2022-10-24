@@ -9,6 +9,14 @@
 sudo ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 ```
 
+国内安装
+```bash
+/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+
+# uninstall
+/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)"
+```
+
 ### 参考
 [What is the best/safest way to reinstall Homebrew?](https://stackoverflow.com/questions/11038028/what-is-the-best-safest-way-to-reinstall-homebrew)
 
